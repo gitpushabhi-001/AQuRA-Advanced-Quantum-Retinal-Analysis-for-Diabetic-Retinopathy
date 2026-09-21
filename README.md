@@ -19,3 +19,20 @@ To fix this, we built AQuRA—a Hybrid Quantum Machine Learning (QML) framework.
 *   **Outstanding Accuracy:** By combining Gaussian calibration with the quantum VQC layer, the model hit 97% accuracy with a 0.97 F1-Score on our test data.
 *   **Rapid Training:** Thanks to the mixed precision setup, the entire hybrid model trains in just 15.35 minutes on a single GPU.
 *   **Reliability:** Our evaluation metrics and confusion matrix show minimal false positives, proving the model is highly stable and precise for real-world data.
+
+
+### ⚖️ Classical (Federated CNN) vs. AQuRA (Hybrid Quantum)
+
+Here is the direct technical and performance comparison between our classical baseline model and the proposed AQuRA quantum framework:
+
+| Feature | Classical Baseline (Federated CNN) | AQuRA (Hybrid Quantum AI) |
+| :--- | :--- | :--- |
+| **Core Architecture** | 3-block CNN (8→16→32) + Flatten + Dense(32) classification head. | U-Net Encoder + 4-qubit Variational Quantum Circuit (VQC). |
+| **Training Ecosystem** | Decentralized Federated Learning (3 Clients, 10 Rounds) tuned by Multi-Agent Optuna[cite: 13]. | Centralized single-GPU training utilizing the PennyLane quantum simulator[cite: 12]. |
+| **Feature Mapping** | Standard mathematical convolutions and pooling. | Uses Quantum Entanglement (CNOT gates) and Rotation gates (RY) to map complex patterns[cite: 12]. |
+| **Model Accuracy** | Achieves 94.91% Validation Accuracy[cite: 13]. | Achieves an outstanding **97.00% Accuracy**[cite: 12]. |
+| **F1-Score** | 94.91% (Weighted)[cite: 13]. | **0.97** (Proving high precision across classes)[cite: 12]. |
+| **Training Time** | Highly lightweight; completes in **5.70 minutes**[cite: 13]. | Computationally heavier due to quantum circuits; completes in **15.35 minutes**[cite: 12]. |
+
+**The Quantum Advantage:** 
+While the Federated CNN provides a fast and privacy-preserving baseline, it halts at an accuracy of ~94.91%[cite: 13]. By replacing standard dense layers with a Variational Quantum Circuit, AQuRA successfully maps features into a high-dimensional quantum space, capturing hidden micro-aneurysm patterns and pushing the diagnostic accuracy to a superior 97%[cite: 12, 13].
