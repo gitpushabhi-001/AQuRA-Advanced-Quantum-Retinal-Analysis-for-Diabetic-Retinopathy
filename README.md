@@ -38,25 +38,7 @@ Here is the direct technical and performance comparison between our classical ba
 While the Federated CNN provides a fast and privacy-preserving baseline, it halts at an accuracy of ~94.91%. By replacing standard dense layers with a Variational Quantum Circuit, AQuRA successfully maps features into a high-dimensional quantum space, capturing hidden micro-aneurysm patterns and pushing the diagnostic accuracy to a superior 97%.
 
 
-# AQuRA: Advanced Quantum Retinal Analysis for Diabetic Retinopathy
 
-### ⚖️ Classical (Federated CNN) vs. AQuRA (Hybrid Quantum)
-
-Here is the direct technical and performance comparison between our classical baseline model and the proposed AQuRA quantum framework:
-
-| Feature | Classical Baseline (Federated CNN) | AQuRA (Hybrid Quantum AI) |
-| :--- | :--- | :--- |
-| **Core Architecture** | 3-block CNN (8→16→32) + Flatten + Dense(32) classification head. | U-Net Encoder + 4-qubit Variational Quantum Circuit (VQC). |
-| **Training Ecosystem** | Decentralized Federated Learning (3 Clients, 10 Rounds) tuned by Multi-Agent Optuna. | Centralized single-GPU training utilizing the PennyLane quantum simulator. |
-| **Feature Mapping** | Standard mathematical convolutions and pooling. | Uses Quantum Entanglement (CNOT gates) and Rotation gates (RY) to map complex patterns. |
-| **Model Accuracy** | Achieves 94.91% Validation Accuracy. | Achieves an outstanding **97.00% Accuracy**. |
-| **F1-Score** | 0.9491 (Weighted). | **0.9700** (Proving high precision across classes). |
-| **Training Time** | Highly lightweight; completes in **5.70 minutes**. | Computationally heavier due to quantum circuits; completes in **15.35 minutes**. |
-
-**The Quantum Advantage:** 
-While the Federated CNN provides a fast and privacy-preserving baseline, it halts at an accuracy of ~94.91%. By replacing standard dense layers with a Variational Quantum Circuit, AQuRA successfully maps features into a high-dimensional quantum space, capturing hidden micro-aneurysm patterns and pushing the diagnostic accuracy to a superior 97%.
-
----
 
 ## 🛠️ Code Details & Architecture Specifications
 
