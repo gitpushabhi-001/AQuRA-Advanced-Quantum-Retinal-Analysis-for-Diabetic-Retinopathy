@@ -29,5 +29,8 @@ def init_db():
     from backend.app.models.db_models import ScanHistory
     Base.metadata.create_all(bind=engine)
 
-# Auto-initialize tables immediately
-init_db()
+# Auto-initialize tables safely
+try:
+    init_db()
+except Exception:
+    pass

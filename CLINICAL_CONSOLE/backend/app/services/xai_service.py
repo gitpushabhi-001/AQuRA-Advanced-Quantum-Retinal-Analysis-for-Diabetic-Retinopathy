@@ -9,7 +9,8 @@ from backend.app.schemas.prediction import (
     Biomarker,
     ClinicalReasoning
 )
-from backend.app.utils.image_processing import generate_synthetic_gradcam_heatmap
+import cv2
+import base64
 from PIL import Image
 
 SEVERITY_LEVELS = [
@@ -61,8 +62,58 @@ class XaiService:
         # Generate realistic bounding boxes corresponding to severity
         boxes = self._generate_lesion_boxes(grade)
         
-        # Generate Grad-CAM Heatmap Overlay
-        heatmap_base64 = generate_synthetic_gradcam_heatmap(image, [b.model_dump() for b in boxes], colormap_type="jet")
+        # Convert input PIL image to an OpenCV BGR numpy array
+        cv_img = cv2.cvtColor(np.array(image.convert("RGB")), cv2.COLOR_RGB2BGR)
+        img_h, img_w = cv_img.shape[:2]
+
+        # Create a blank grayscale activation map of the same height and width
+        activation_map = np.zeros((img_h, img_w), dtype=np.uint8)
+
+        # Loop through generated boxes and draw solid white circles simulating focal activations
+        if boxes:
+            for b in boxes:
+                ymin, xmin, ymax, xmax = b.box
+                center_x = int(((xmin + xmax) / 2.0) * img_w)
+                center_y = int(((ymin + ymax) / 2.0) * img_h)
+                box_w = (xmax - xmin) * img_w
+                box_h = (ymax - ymin) * img_h
+                # Circle radius proportional to bounding box size
+                radius = max(int(max(box_w, box_h) * 0.75), 18)
+                cv2.circle(activation_map, (center_x, center_y), radius, 255, -1)
+        else:
+            # Baseline central activation for healthy retina
+            center_x = img_w // 2
+            center_y = img_h // 2
+            radius = max(int(min(img_w, img_h) * 0.22), 20)
+            cv2.circle(activation_map, (center_x, center_y), radius, 160, -1)
+
+        # Apply a heavy cv2.GaussianBlur (ksize 151x151) to blend hotspots into a smooth gradient
+        k_w = min(151, img_w if img_w % 2 == 1 else img_w - 1)
+        k_h = min(151, img_h if img_h % 2 == 1 else img_h - 1)
+        ksize = (max(3, k_w), max(3, k_h))
+        blurred_activation = cv2.GaussianBlur(activation_map, ksize, 0)
+
+        # Normalize the activation map and apply cv2.applyColorMap using cv2.COLORMAP_JET
+        norm_activation = cv2.normalize(
+            blurred_activation,
+            None,
+            alpha=0,
+            beta=255,
+            norm_type=cv2.NORM_MINMAX,
+            dtype=cv2.CV_8U
+        )
+        heatmap_color = cv2.applyColorMap(norm_activation, cv2.COLORMAP_JET)
+
+        # Superimpose the colored heatmap onto the original image
+        blended = cv2.addWeighted(cv_img, 0.55, heatmap_color, 0.45, 0)
+
+        # Encode the final blended image to a .jpg buffer and convert it to a utf-8 base64 string
+        success, buffer = cv2.imencode(".jpg", blended)
+        if success:
+            encoded_jpg = base64.b64encode(buffer).decode("utf-8")
+            heatmap_base64 = f"data:image/jpeg;base64,{encoded_jpg}"
+        else:
+            heatmap_base64 = ""
         heatmap_data = HeatmapData(
             overlay_base64=heatmap_base64,
             grid_resolution=[w, h],

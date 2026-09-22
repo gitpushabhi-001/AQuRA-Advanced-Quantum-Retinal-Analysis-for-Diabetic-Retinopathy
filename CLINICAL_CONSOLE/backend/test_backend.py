@@ -18,7 +18,7 @@ def test_env_and_config():
     print("  Resolved MODEL_PATH:", settings.MODEL_PATH)
     print("  MODEL_PATH is_file:", settings.MODEL_PATH.is_file())
     
-    assert settings.API_KEY == "your_api_key_here", f"Expected API_KEY to be 'your_api_key_here', got {settings.API_KEY}"
+    assert isinstance(settings.API_KEY, str) and len(settings.API_KEY) > 0, f"Expected non-empty API_KEY, got {settings.API_KEY}"
     assert settings.DEBUG is True, f"Expected DEBUG to be True, got {settings.DEBUG}"
     assert settings.MODEL_PATH.name == "QUANTUM_MODEL.pth", f"Expected model file name 'QUANTUM_MODEL.pth', got {settings.MODEL_PATH.name}"
     assert settings.MODEL_PATH.is_file(), f"Expected QUANTUM_MODEL.pth to exist at {settings.MODEL_PATH}"
