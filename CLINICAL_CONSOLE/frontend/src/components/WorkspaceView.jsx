@@ -14,7 +14,8 @@ import {
   RefreshCw, 
   ChevronRight, 
   Layers, 
-  Eye 
+  Eye,
+  Sparkles
 } from 'lucide-react';
 import { SAMPLE_CASES } from '../data/sampleCases';
 import diagnosticBg from '../assets/image_f6ca80.jpg';
@@ -95,17 +96,17 @@ export const WorkspaceView = ({
     >
       
       {/* 1. Page Breadcrumbs & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-teal-100/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-teal-100/80 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-medium mb-1">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium mb-1">
             <span>Clinical Core</span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-teal-700 font-semibold">Diagnostic Screening</span>
+            <span className="text-teal-700 dark:text-teal-400 font-semibold">Diagnostic Screening</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-sans">
             Retinal Screening Workspace
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-3xl mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-3xl mt-0.5">
             Upload fundus photography to detect diabetic retinopathy via 4-qubit parameterized variational quantum circuits with explainable Grad-CAM heatmaps.
           </p>
         </div>
@@ -113,9 +114,9 @@ export const WorkspaceView = ({
         {activeResult && !isAnalyzing && (
           <button
             onClick={onReset}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-teal-300 shadow-xs self-start sm:self-center floating-elevation"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-teal-300 dark:hover:border-teal-600 shadow-xs self-start sm:self-center floating-elevation"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-teal-600" />
+            <RefreshCw className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
             <span>New Examination</span>
           </button>
         )}
@@ -123,14 +124,14 @@ export const WorkspaceView = ({
 
       {/* Error Banner */}
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between shadow-xs">
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
             <span className="font-medium">{errorMessage}</span>
           </div>
           <button
             onClick={onDismissError}
-            className="text-xs font-bold underline ml-4 hover:text-rose-900 cursor-pointer"
+            className="text-xs font-bold underline ml-4 hover:text-rose-900 dark:hover:text-rose-100 cursor-pointer"
           >
             Dismiss
           </button>
@@ -142,20 +143,15 @@ export const WorkspaceView = ({
         
         {/* Upload Module Card (col-span-7) */}
         <div 
-          className="lg:col-span-7 rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-          }}
+          className="lg:col-span-7 rounded-2xl border border-teal-100/90 dark:border-slate-800 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical bg-white/90 dark:bg-slate-900/85 backdrop-blur-md transition-colors duration-300"
         >
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Upload className="w-5 h-5 text-teal-700" />
-                <h2 className="text-base font-bold text-slate-900 tracking-tight">Image Ingestion</h2>
+                <Upload className="w-5 h-5 text-teal-700 dark:text-teal-400" />
+                <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Image Ingestion</h2>
               </div>
-              <span className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200">
+              <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700">
                 DICOM / RGB
               </span>
             </div>
@@ -165,7 +161,7 @@ export const WorkspaceView = ({
               {/* Drop Zone */}
               <div 
                 onClick={() => document.getElementById('fundus-file-input')?.click()}
-                className="md:col-span-7 bg-teal-50/50 backdrop-blur-xs border-2 border-dashed border-teal-200/90 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-teal-50/80 hover:border-teal-400 transition-all cursor-pointer group"
+                className="md:col-span-7 bg-teal-50/50 dark:bg-slate-800/60 backdrop-blur-xs border-2 border-dashed border-teal-200/90 dark:border-teal-800/80 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-teal-50/80 dark:hover:bg-slate-800/90 hover:border-teal-400 dark:hover:border-teal-600 transition-all cursor-pointer group"
               >
                 <input 
                   id="fundus-file-input"
@@ -175,19 +171,19 @@ export const WorkspaceView = ({
                   onChange={handleFileInput}
                   disabled={isAnalyzing}
                 />
-                <div className="w-12 h-12 rounded-full bg-teal-100/70 flex items-center justify-center text-teal-700 mb-3 group-hover:scale-110 transition-transform shadow-xs">
-                  <FolderOpen className="w-6 h-6 text-teal-700" />
+                <div className="w-12 h-12 rounded-full bg-teal-100/70 dark:bg-teal-950/80 flex items-center justify-center text-teal-700 dark:text-teal-300 mb-3 group-hover:scale-110 transition-transform shadow-xs">
+                  <FolderOpen className="w-6 h-6" />
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-800">
+                <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Drag & drop fundus image
                 </p>
-                <p className="text-[11px] text-slate-500 mt-0.5 mb-3.5">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 mb-3.5">
                   Supports JPG, PNG (Max 10 MB)
                 </p>
                 <button
                   type="button"
                   disabled={isAnalyzing}
-                  className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 focus:outline-none floating-elevation"
+                  className="px-4 py-2 rounded-lg bg-teal-700 hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-500 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 focus:outline-none floating-elevation cursor-pointer"
                 >
                   <FolderOpen className="w-3.5 h-3.5" />
                   <span>Choose File</span>
@@ -196,21 +192,21 @@ export const WorkspaceView = ({
 
               {/* Divider */}
               <div className="hidden md:flex md:col-span-1 flex-col items-center justify-center">
-                <span className="font-mono text-[11px] uppercase font-bold text-slate-400">or</span>
+                <span className="font-mono text-[11px] uppercase font-bold text-slate-400 dark:text-slate-500">or</span>
               </div>
 
               {/* Try Sample Images */}
               <div className="md:col-span-4 flex flex-col gap-2.5">
-                <span className="text-xs font-semibold text-slate-600">Try a Sample Image</span>
+                <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Try a Sample Image</span>
                 
                 {/* Sample 1: Healthy */}
                 <button
                   type="button"
                   onClick={() => handleSampleClick(SAMPLE_CASES[0])}
                   disabled={isAnalyzing}
-                  className="w-full bg-slate-50/90 hover:bg-teal-50/80 border border-slate-200/80 hover:border-teal-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs"
+                  className="w-full bg-slate-50/90 dark:bg-slate-800/80 hover:bg-teal-50/80 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-600 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200 dark:border-slate-700">
                     <img 
                       src={SAMPLE_CASES[0]?.imageUrl} 
                       alt="Healthy Fundus" 
@@ -218,8 +214,8 @@ export const WorkspaceView = ({
                     />
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-xs font-bold text-slate-900 truncate">Healthy Retina</span>
-                    <span className="block font-mono text-[10px] text-emerald-700 font-semibold">No DR (Sample)</span>
+                    <span className="block text-xs font-bold text-slate-900 dark:text-white truncate">Healthy Retina</span>
+                    <span className="block font-mono text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">No DR (Sample)</span>
                   </div>
                 </button>
 
@@ -228,9 +224,9 @@ export const WorkspaceView = ({
                   type="button"
                   onClick={() => handleSampleClick(SAMPLE_CASES[1] || SAMPLE_CASES[0])}
                   disabled={isAnalyzing}
-                  className="w-full bg-slate-50/90 hover:bg-rose-50/80 border border-slate-200/80 hover:border-rose-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs"
+                  className="w-full bg-slate-50/90 dark:bg-slate-800/80 hover:bg-rose-50/80 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-600 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200">
+                  <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200 dark:border-slate-700">
                     <img 
                       src={SAMPLE_CASES[1]?.imageUrl} 
                       alt="Severe DR" 
@@ -238,8 +234,8 @@ export const WorkspaceView = ({
                     />
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-xs font-bold text-slate-900 truncate">Pathologic DR</span>
-                    <span className="block font-mono text-[10px] text-rose-700 font-semibold">Proliferative (Sample)</span>
+                    <span className="block text-xs font-bold text-slate-900 dark:text-white truncate">Pathologic DR</span>
+                    <span className="block font-mono text-[10px] text-rose-700 dark:text-rose-400 font-semibold">Proliferative (Sample)</span>
                   </div>
                 </button>
               </div>
@@ -247,36 +243,36 @@ export const WorkspaceView = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 mt-4 border-t border-slate-100 font-mono text-[11px] text-slate-500">
-            <span>PIPELINE: <strong className="text-slate-800">QUANTUM-VISION-V2</strong></span>
-            <span>CALIBRATION: <strong className="text-teal-700 font-semibold">STABLE</strong></span>
+          <div className="flex items-center justify-between pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 font-mono text-[11px] text-slate-500 dark:text-slate-400">
+            <span>PIPELINE: <strong className="text-slate-800 dark:text-slate-200">QUANTUM-VISION-V2</strong></span>
+            <span>CALIBRATION: <strong className="text-teal-700 dark:text-teal-400 font-semibold">STABLE</strong></span>
           </div>
         </div>
 
         {/* Processing State Card (col-span-5) */}
         <div 
-          className="lg:col-span-5 rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-          }}
+          className="lg:col-span-5 rounded-2xl border border-teal-100/90 dark:border-slate-800 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation bg-transparent backdrop-blur-md transition-colors duration-300 relative overflow-hidden"
         >
-          <div>
+          {/* Active Processing Glass Overlay */}
+          {isAnalyzing && (
+            <div className="absolute inset-0 bg-white/20 dark:bg-slate-900/40 backdrop-blur-md pointer-events-none rounded-2xl transition-all duration-300 border border-teal-400/30" />
+          )}
+
+          <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-teal-700" />
-                <h2 className="text-base font-bold text-slate-900 tracking-tight">Processing Pipeline</h2>
+                <Activity className="w-5 h-5 text-teal-700 dark:text-teal-400" />
+                <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Processing Pipeline</h2>
               </div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 font-mono text-[10px] font-semibold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/80 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-mono text-[10px] font-semibold">
                 {isAnalyzing ? (
                   <>
-                    <Loader2 className="w-3 h-3 animate-spin text-teal-700" />
+                    <Loader2 className="w-3 h-3 animate-spin text-teal-700 dark:text-teal-400" />
                     <span>Processing...</span>
                   </>
                 ) : activeResult ? (
                   <>
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                     <span>Complete ({(activeResult.quantum_telemetry?.inference_latency_ms || 28.4).toFixed(1)} ms)</span>
                   </>
                 ) : (
@@ -296,13 +292,13 @@ export const WorkspaceView = ({
                   <li key={step.num} className={`flex items-start gap-3 transition-opacity ${isStepPending ? 'opacity-40' : 'opacity-100'}`}>
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-mono text-[11px] font-bold ${
                       isStepCompleted 
-                        ? 'bg-emerald-100 text-emerald-800' 
+                        ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300' 
                         : isStepActive 
-                          ? 'bg-teal-700 text-white shadow-xs animate-pulse' 
-                          : 'bg-slate-100 text-slate-500'
+                          ? 'bg-teal-700 dark:bg-teal-600 text-white shadow-xs animate-pulse' 
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                     }`}>
                       {isStepCompleted ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
                       ) : isStepActive ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       ) : (
@@ -311,13 +307,13 @@ export const WorkspaceView = ({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <p className={`text-xs font-bold ${isStepActive ? 'text-teal-700 font-extrabold' : 'text-slate-800'}`}>
+                        <p className={`text-xs font-bold ${isStepActive ? 'text-teal-700 dark:text-teal-400 font-extrabold' : 'text-slate-800 dark:text-slate-200'}`}>
                           {step.title}
                         </p>
-                        {isStepCompleted && <span className="font-mono text-[10px] text-emerald-700 font-semibold">Done</span>}
-                        {isStepActive && <span className="font-mono text-[10px] text-teal-700 font-bold animate-pulse">Active</span>}
+                        {isStepCompleted && <span className="font-mono text-[10px] text-emerald-700 dark:text-emerald-400 font-semibold">Done</span>}
+                        {isStepActive && <span className="font-mono text-[10px] text-teal-700 dark:text-teal-400 font-bold animate-pulse">Active</span>}
                       </div>
-                      <p className="text-[11px] text-slate-500 leading-snug">{step.desc}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{step.desc}</p>
                     </div>
                   </li>
                 );
@@ -325,9 +321,9 @@ export const WorkspaceView = ({
             </ol>
           </div>
 
-          <div className="bg-slate-50 border border-slate-100 px-3.5 py-2 rounded-xl flex items-center justify-between font-mono text-[11px] text-slate-500 mt-4">
+          <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 px-3.5 py-2 rounded-xl flex items-center justify-between font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-4">
             <span>HARDWARE ACCEL</span>
-            <span className="text-emerald-700 font-bold">QPU SIMULATOR READY</span>
+            <span className="text-emerald-700 dark:text-emerald-400 font-bold">QPU SIMULATOR READY</span>
           </div>
         </div>
 
@@ -336,51 +332,46 @@ export const WorkspaceView = ({
       {/* 3. Middle Grid: Dual-Viewer Interface */}
       {(imagePreview || activeResult) && (
         <section 
-          className="rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical space-y-4 floating-elevation glass-card-clinical"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-          }}
+          className="rounded-2xl border border-teal-100/90 dark:border-slate-800 p-5 sm:p-6 shadow-surgical space-y-4 floating-elevation glass-card-clinical bg-white/90 dark:bg-slate-900/85 backdrop-blur-md transition-colors duration-300"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-teal-700" />
-                <h2 className="text-base font-bold text-slate-900">Analysis Results & Dual-Viewer</h2>
+                <BarChart3 className="w-5 h-5 text-teal-700 dark:text-teal-400" />
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">Analysis Results & Dual-Viewer</h2>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Original high-resolution fundus image paired with Gaussian calibrated Grad-CAM heatmap.
               </p>
             </div>
             
-            <div className="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+            <div className="flex items-center gap-3 font-mono text-[11px] text-slate-500 dark:text-slate-400">
               {activeResult && (
                 <button
                   onClick={() => setShowLesions(!showLesions)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border floating-elevation ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border floating-elevation cursor-pointer ${
                     showLesions 
-                      ? 'bg-teal-50 border-teal-300 text-teal-800' 
-                      : 'bg-white border-slate-200 text-slate-600'
+                      ? 'bg-teal-50 dark:bg-teal-950/80 border-teal-300 dark:border-teal-700 text-teal-800 dark:text-teal-300' 
+                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
                   <Layers className="w-3.5 h-3.5" />
                   <span>Lesion Bounding Boxes: {showLesions ? 'ON' : 'OFF'}</span>
                 </button>
               )}
-              <span className="hidden sm:inline">RESOLUTION: <strong className="text-slate-800">2048 × 1536</strong></span>
+              <span className="hidden sm:inline">RESOLUTION: <strong className="text-slate-800 dark:text-slate-200">2048 × 1536</strong></span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Left Container: Original Fundus */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col gap-2.5">
+            <div className="bg-slate-50/80 dark:bg-slate-800/80 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700 flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-800">Original Fundus Photography</span>
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Original Fundus Photography</span>
                 <button
                   onClick={() => setFullscreenImage(imagePreview || activeResult?.image_url)}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 floating-elevation"
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-200 floating-elevation cursor-pointer"
                   title="Expand Fullscreen"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
@@ -418,6 +409,19 @@ export const WorkspaceView = ({
                   </div>
                 ))}
 
+                {/* Active Scanning Glass Overlay */}
+                {isAnalyzing && (
+                  <div className="absolute inset-0 bg-white/20 dark:bg-slate-900/40 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none z-10">
+                    <div className="relative flex items-center justify-center">
+                      <div className="w-14 h-14 rounded-full border-2 border-dashed border-teal-400 animate-spin" />
+                      <Activity className="w-6 h-6 text-teal-400 absolute animate-pulse" />
+                    </div>
+                    <span className="mt-2 font-mono text-[11px] font-bold text-teal-900 dark:text-teal-200 bg-white/70 dark:bg-slate-900/80 px-2.5 py-1 rounded-full border border-teal-300/80 dark:border-teal-700/80 shadow-xs">
+                      {pipelineSteps[processingStep]?.title || "Processing..."}
+                    </span>
+                  </div>
+                )}
+
                 <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-slate-900/85 backdrop-blur font-mono text-[10px] text-white">
                   SCAN-ID: {activeResult?.scan_uuid?.slice(0, 10) || 'FD-7741-B'}
                 </div>
@@ -425,17 +429,17 @@ export const WorkspaceView = ({
             </div>
 
             {/* Right Container: Grad-CAM Heatmap */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col gap-2.5">
+            <div className="bg-slate-50/80 dark:bg-slate-800/80 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700 flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-800">Grad-CAM Heatmap</span>
-                  <span className="font-mono text-[10px] text-teal-800 bg-teal-100/70 border border-teal-200 px-1.5 py-0.5 rounded font-bold">
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Grad-CAM Heatmap</span>
+                  <span className="font-mono text-[10px] text-teal-800 dark:text-teal-300 bg-teal-100/70 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800 px-1.5 py-0.5 rounded font-bold">
                     (Gaussian Calibrated)
                   </span>
                 </div>
                 <button
                   onClick={() => setFullscreenImage(activeResult?.heatmap?.overlay_base64 || imagePreview)}
-                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-600 floating-elevation"
+                  className="w-7 h-7 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-200 floating-elevation cursor-pointer"
                   title="Expand Heatmap"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
@@ -450,9 +454,12 @@ export const WorkspaceView = ({
                     className="w-full h-full object-cover crisp-retinal-img group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2 p-4">
-                    <Loader2 className="w-6 h-6 animate-spin text-teal-500" />
-                    <span className="text-xs font-medium">Synthesizing Attention Activation Map...</span>
+                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-600 dark:text-slate-300 font-mono text-xs p-6 text-center bg-white/20 dark:bg-slate-900/40 backdrop-blur-md">
+                    <Activity className="w-8 h-8 mb-2 text-teal-600 dark:text-teal-400 opacity-60 animate-pulse" />
+                    <span>Variational Quantum Attention Heatmap</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                      {isAnalyzing ? "Computing QNode gradients & layer activations..." : "Awaiting forward inference execution"}
+                    </span>
                   </div>
                 )}
 
@@ -473,23 +480,18 @@ export const WorkspaceView = ({
           
           {/* Prediction Result Card (col-span-5) */}
           <div 
-            className="lg:col-span-5 rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-            }}
+            className="lg:col-span-5 rounded-2xl border border-teal-100/90 dark:border-slate-800 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical bg-white/90 dark:bg-slate-900/85 backdrop-blur-md transition-colors duration-300"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-teal-700" />
-                  <h3 className="text-base font-bold text-slate-900">Prediction Result</h3>
+                  <ShieldCheck className="w-5 h-5 text-teal-700 dark:text-teal-400" />
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Prediction Result</h3>
                 </div>
                 <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold border ${
                   activeResult.predicted_label === 'NO_DR'
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                    : 'bg-rose-50 text-rose-800 border-rose-200'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+                    : 'bg-rose-50 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800'
                 }`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${
                     activeResult.predicted_label === 'NO_DR' ? 'bg-emerald-500' : 'bg-rose-500'
@@ -501,8 +503,8 @@ export const WorkspaceView = ({
               {/* Diagnostic Finding Banner */}
               <div className={`p-4 rounded-xl flex items-center gap-3.5 mb-5 border ${
                 activeResult.predicted_label === 'NO_DR'
-                  ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
-                  : 'bg-rose-50/70 border-rose-200 text-rose-900'
+                  ? 'bg-emerald-50/70 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+                  : 'bg-rose-50/70 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
               }`}>
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
                   activeResult.predicted_label === 'NO_DR' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
@@ -520,17 +522,17 @@ export const WorkspaceView = ({
               </div>
 
               {/* Model Certainty */}
-              <div className="mb-4 flex items-baseline justify-between bg-slate-50 border border-slate-100 p-4 rounded-xl">
+              <div className="mb-4 flex items-baseline justify-between bg-slate-50/80 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 p-4 rounded-xl">
                 <div>
-                  <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     Model Certainty
                   </span>
-                  <span className="font-mono text-3xl font-extrabold text-slate-900">
+                  <span className="font-mono text-3xl font-extrabold text-slate-900 dark:text-white">
                     {Math.round(activeResult.confidence * 100)}%
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="font-mono text-xs font-bold text-emerald-700">
+                  <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
                     +1.4% vs Baseline
                   </span>
                   <span className="block font-mono text-[10px] text-slate-400">
@@ -541,55 +543,50 @@ export const WorkspaceView = ({
 
               {/* Sub-metrics Grid */}
               <div className="grid grid-cols-2 gap-3 font-mono text-xs mb-4">
-                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
-                  <span className="block text-[11px] text-slate-500 font-sans font-medium">DR Severity</span>
-                  <span className={`font-bold text-sm ${activeResult.severity_grade > 0 ? 'text-rose-700' : 'text-emerald-700'}`}>
+                <div className="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 p-3 rounded-xl">
+                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-sans font-medium">DR Severity</span>
+                  <span className={`font-bold text-sm ${activeResult.severity_grade > 0 ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
                     {activeResult.severity_name} ({activeResult.severity_grade})
                   </span>
                 </div>
-                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
-                  <span className="block text-[11px] text-slate-500 font-sans font-medium">Quantum Latency</span>
-                  <span className="font-bold text-sm text-teal-800">
+                <div className="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 p-3 rounded-xl">
+                  <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-sans font-medium">Quantum Latency</span>
+                  <span className="font-bold text-sm text-teal-800 dark:text-teal-300">
                     {(activeResult.quantum_telemetry?.inference_latency_ms || 28.4).toFixed(1)} ms
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between font-mono text-[11px] text-slate-500">
-              <span>CIRCUIT DEPTH: <strong>{activeResult.quantum_telemetry?.circuit_depth || 4}</strong></span>
-              <span>QUBITS: <strong>{activeResult.quantum_telemetry?.qubit_count || 4}</strong></span>
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between font-mono text-[11px] text-slate-500 dark:text-slate-400">
+              <span>CIRCUIT DEPTH: <strong className="text-slate-800 dark:text-slate-200">{activeResult.quantum_telemetry?.circuit_depth || 4}</strong></span>
+              <span>QUBITS: <strong className="text-slate-800 dark:text-slate-200">{activeResult.quantum_telemetry?.qubit_count || 4}</strong></span>
             </div>
           </div>
 
           {/* Gemini Multimodal Clinical Report (col-span-7) */}
-          <div 
-            className="lg:col-span-7 rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-            }}
-          >
+          <div className="col-span-1 lg:col-span-7 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs flex flex-col justify-between floating-elevation">
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-teal-700" />
-                  <h3 className="text-base font-bold text-slate-900">Clinical Reasoning & Decision Support</h3>
+                  <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                    Clinical Impression & ICD Guidance
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700">
+                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300">
                     Gemini Multimodal AI
                   </span>
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 border border-teal-200 text-teal-800">
+                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 text-teal-800 dark:text-teal-300">
                     ICD-10: {activeResult.clinical_reasoning?.icd_code || 'E11.319'}
                   </span>
                 </div>
               </div>
 
               {/* Summary Text */}
-              <div className="p-4 bg-teal-50/40 border border-teal-100 rounded-xl mb-4">
-                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-sans">
+              <div className="p-4 bg-teal-50/40 dark:bg-teal-950/30 border border-teal-100 dark:border-teal-900/60 rounded-xl mb-4">
+                <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans">
                   {activeResult.clinical_reasoning?.summary || 
                     "Surgical-grade fundus inspection indicates clear foveal avascular zone margins without proliferative neovascularization."}
                 </p>
@@ -598,14 +595,14 @@ export const WorkspaceView = ({
               {/* Biomarkers detected */}
               {activeResult.clinical_reasoning?.biomarkers?.length > 0 && (
                 <div className="mb-4">
-                  <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
                     Identified Microvascular Biomarkers
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[11px]">
                     {activeResult.clinical_reasoning.biomarkers.map((b, i) => (
-                      <div key={i} className="bg-slate-50 border border-slate-200/80 p-2.5 rounded-lg">
-                        <span className="block font-bold text-slate-800">{b.name}</span>
-                        <span className="block text-slate-500 text-[10px] font-sans">{b.status}</span>
+                      <div key={i} className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 p-2.5 rounded-lg">
+                        <span className="block font-bold text-slate-800 dark:text-slate-200">{b.name}</span>
+                        <span className="block text-slate-500 dark:text-slate-400 text-[10px] font-sans">{b.status}</span>
                       </div>
                     ))}
                   </div>
@@ -613,11 +610,11 @@ export const WorkspaceView = ({
               )}
 
               {/* Action Recommendation */}
-              <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                <span className="block text-[11px] font-bold uppercase tracking-wider text-teal-800 mb-1">
+              <div className="p-3.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 rounded-xl">
+                <span className="block text-[11px] font-bold uppercase tracking-wider text-teal-800 dark:text-teal-300 mb-1">
                   Recommended Action Plan
                 </span>
-                <p className="text-xs text-slate-700 leading-relaxed">
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   {activeResult.clinical_reasoning?.recommended_action || 
                     "Routine annual fundus examination indicated. Maintain HbA1c target < 7.0%."}
                 </p>
@@ -625,7 +622,7 @@ export const WorkspaceView = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-5 mt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
               <button
                 onClick={onOpenReport}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer floating-elevation"
@@ -636,9 +633,9 @@ export const WorkspaceView = ({
 
               <button
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium shadow-xs transition-colors cursor-pointer floating-elevation"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 text-xs font-medium shadow-xs transition-colors cursor-pointer floating-elevation"
               >
-                <Download className="w-3.5 h-3.5 text-slate-500" />
+                <Download className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span>Export PDF</span>
               </button>
             </div>

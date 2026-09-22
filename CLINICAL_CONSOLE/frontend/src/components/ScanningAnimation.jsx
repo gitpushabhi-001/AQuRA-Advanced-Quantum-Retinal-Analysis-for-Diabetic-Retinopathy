@@ -59,10 +59,10 @@ export const ScanningAnimation = ({ imagePreview, darkMode }) => {
     >
       
       {/* High-Tech HUD Scanner Card */}
-      <div className={`relative rounded-3xl overflow-hidden border shadow-2xl p-6 sm:p-8 backdrop-blur-2xl ${
+      <div className={`relative rounded-3xl overflow-hidden border shadow-2xl p-6 sm:p-8 backdrop-blur-md bg-transparent ${
         darkMode 
-          ? 'bg-slate-950/90 border-cyan-500/30 shadow-[0_0_50px_rgba(0,242,254,0.15)]' 
-          : 'bg-white/95 border-cyan-400/50 shadow-[0_0_40px_rgba(0,242,254,0.2)]'
+          ? 'border-cyan-500/30 shadow-[0_0_50px_rgba(0,242,254,0.15)]' 
+          : 'bg-white/20 border-cyan-400/50 shadow-[0_0_40px_rgba(0,242,254,0.2)]'
       }`}>
         
         {/* Top Holographic Navigation Bar */}

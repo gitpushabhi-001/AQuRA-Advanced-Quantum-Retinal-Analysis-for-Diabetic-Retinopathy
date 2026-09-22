@@ -96,7 +96,7 @@ export const PatientArchiveView = ({
       
       {/* 1. Header with HIPAA Compliance Badge & Clinical Subtitle */}
       <section 
-        className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 overflow-hidden rounded-2xl border border-teal-100/90 p-6 shadow-surgical glass-card-clinical"
+        className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 overflow-hidden rounded-2xl border border-teal-100/90 dark:border-slate-800 p-6 shadow-surgical glass-card-clinical"
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(12px)',
@@ -104,25 +104,25 @@ export const PatientArchiveView = ({
         }}
       >
         <div className="relative z-10">
-          <p className="text-xs font-semibold uppercase tracking-wider text-teal-700 font-mono">
+          <p className="text-xs font-semibold uppercase tracking-wider text-teal-700 dark:text-teal-400 font-mono">
             PATIENT MANAGEMENT & RECORDS
           </p>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-0.5 font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-0.5 font-sans">
             Patient Archive — Clinical EHR
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
             Secure longitudinal records, fundus imaging archive, and AI-powered diagnostic screening history.
           </p>
         </div>
 
         {/* HIPAA Compliance Badge */}
-        <div className="relative z-10 rounded-xl bg-teal-50/80 border border-teal-200/80 px-4 py-3 flex items-center gap-3.5 max-w-md backdrop-blur-xs">
+        <div className="relative z-10 rounded-xl bg-teal-50/80 dark:bg-teal-950/40 border border-teal-200/80 dark:border-teal-800 px-4 py-3 flex items-center gap-3.5 max-w-md backdrop-blur-xs">
           <div className="w-9 h-9 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-slate-800">HIPAA & GDPR Clinical Encryption</h4>
-            <p className="text-[11px] text-slate-600 leading-snug">
+            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">HIPAA & GDPR Clinical Encryption</h4>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug">
               Patient data is encrypted at rest and accessible exclusively by credentialed clinicians.
             </p>
           </div>
@@ -131,7 +131,7 @@ export const PatientArchiveView = ({
 
       {/* 2. Filter & Search Action Bar */}
       <section 
-        className="border border-teal-100/90 rounded-2xl p-4 shadow-surgical flex flex-col md:flex-row items-center justify-between gap-3 glass-card-clinical"
+        className="border border-teal-100/90 dark:border-slate-800 rounded-2xl p-4 shadow-surgical flex flex-col md:flex-row items-center justify-between gap-3 glass-card-clinical"
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(12px)',
@@ -144,7 +144,7 @@ export const PatientArchiveView = ({
           
           {/* Search with Ctrl+K */}
           <div className="relative w-full sm:max-w-md">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
               <Search className="w-4 h-4" />
             </span>
             <input
@@ -153,10 +153,10 @@ export const PatientArchiveView = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by Scan ID, Filename, or Condition..."
-              className="w-full pl-10 pr-18 py-2 bg-slate-50/90 border border-slate-200 rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 transition-all shadow-inner"
+              className="w-full pl-10 pr-18 py-2 bg-slate-50/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs sm:text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 transition-all shadow-inner"
             />
             <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
-              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400 bg-white border border-slate-200 rounded shadow-xs">
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded shadow-xs">
                 Ctrl + K
               </kbd>
             </div>
@@ -168,8 +168,8 @@ export const PatientArchiveView = ({
             onClick={() => setHighRiskOnly(!highRiskOnly)}
             className={`w-full sm:w-auto flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap shadow-xs ${
               highRiskOnly
-                ? 'bg-rose-600 text-white border-rose-600'
-                : 'bg-rose-50/90 border-rose-200 text-rose-800 hover:bg-rose-100/90'
+                ? 'bg-rose-600 text-white border-rose-600 dark:bg-rose-600 dark:border-rose-500'
+                : 'bg-rose-50/90 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 hover:bg-rose-100/90 dark:hover:bg-rose-900/50'
             }`}
           >
             <span className={`w-2 h-2 rounded-full ${highRiskOnly ? 'bg-white' : 'bg-rose-500 animate-ping'}`} />
@@ -181,7 +181,7 @@ export const PatientArchiveView = ({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 rounded-xl border border-slate-200 bg-white/80 hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
               title="Refresh database records"
             >
               <RefreshCw className="w-4 h-4" />
@@ -193,9 +193,9 @@ export const PatientArchiveView = ({
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           <button
             onClick={handleExportJSON}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/90 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors cursor-pointer floating-elevation"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/90 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-xs transition-colors cursor-pointer floating-elevation"
           >
-            <Download className="w-3.5 h-3.5 text-slate-500" />
+            <Download className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <span>Export Records (JSON)</span>
           </button>
         </div>
@@ -204,7 +204,7 @@ export const PatientArchiveView = ({
 
       {/* 3. Longitudinal EHR Data Table */}
       <section 
-        className="border border-teal-100/90 rounded-2xl shadow-surgical overflow-hidden glass-card-clinical"
+        className="border border-teal-100/90 dark:border-slate-800 rounded-2xl shadow-surgical overflow-hidden glass-card-clinical"
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(12px)',
@@ -214,11 +214,11 @@ export const PatientArchiveView = ({
         
         {filteredList.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 dark:text-slate-500">
               <Database className="w-6 h-6" />
             </div>
-            <h3 className="text-sm font-bold text-slate-800">No Patient Records Match Query</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No Patient Records Match Query</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
               Try adjusting your search criteria or conduct a new diagnostic screening from the workspace.
             </p>
           </div>
@@ -226,7 +226,7 @@ export const PatientArchiveView = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/80 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3 px-4 font-semibold">Scan ID</th>
                   <th className="py-3 px-4 font-semibold">Patient File</th>
                   <th className="py-3 px-4 font-semibold">Timestamp</th>
@@ -235,7 +235,7 @@ export const PatientArchiveView = ({
                   <th className="py-3 px-4 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-slate-700 dark:text-slate-300">
                 {filteredList.map((item) => {
                   const isHighRisk = item.severity_grade >= 2;
                   const formattedDate = item.created_at 
@@ -251,12 +251,12 @@ export const PatientArchiveView = ({
                   return (
                     <tr 
                       key={item.scan_uuid || item.id}
-                      className="hover:bg-teal-50/30 transition-colors group"
+                      className="hover:bg-teal-50/30 dark:hover:bg-teal-950/30 transition-colors group"
                     >
                       {/* Scan ID with Icon */}
-                      <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                      <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white">
                         <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-teal-600" />
+                          <span className="w-2 h-2 rounded-full bg-teal-600 dark:bg-teal-400" />
                           <span>{item.scan_uuid?.slice(0, 10) || `SCAN-${item.id}`}</span>
                         </div>
                       </td>
@@ -264,19 +264,19 @@ export const PatientArchiveView = ({
                       {/* Patient File / Filename */}
                       <td className="py-3.5 px-4">
                         <div>
-                          <span className="font-semibold text-slate-900 block truncate max-w-[200px]">
+                          <span className="font-semibold text-slate-900 dark:text-white block truncate max-w-[200px]">
                             {item.filename || 'Fundus_Examination.jpg'}
                           </span>
-                          <span className="font-mono text-[10px] text-slate-400">
+                          <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500">
                             {item.lesion_count !== undefined ? `${item.lesion_count} Lesions Isolated` : 'Calibrated'}
                           </span>
                         </div>
                       </td>
 
                       {/* Date */}
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-slate-500 dark:text-slate-400 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                           <span>{formattedDate}</span>
                         </div>
                       </td>
@@ -285,10 +285,10 @@ export const PatientArchiveView = ({
                       <td className="py-3.5 px-4">
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold font-mono border ${
                           item.predicted_label === 'NO_DR'
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                             : isHighRisk
-                              ? 'bg-rose-50 text-rose-800 border-rose-200'
-                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                              ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                              : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
                             item.predicted_label === 'NO_DR' ? 'bg-emerald-500' : isHighRisk ? 'bg-rose-500' : 'bg-amber-500'
@@ -300,15 +300,15 @@ export const PatientArchiveView = ({
                       {/* Quantum Certainty Progress */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2 max-w-[120px]">
-                          <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
                             <div 
                               className={`h-full rounded-full ${
-                                item.predicted_label === 'NO_DR' ? 'bg-emerald-500' : 'bg-teal-600'
+                                item.predicted_label === 'NO_DR' ? 'bg-emerald-500' : 'bg-teal-600 dark:bg-teal-400'
                               }`}
                               style={{ width: `${Math.round(item.confidence * 100)}%` }}
                             />
                           </div>
-                          <span className="font-mono text-[11px] font-bold text-slate-800">
+                          <span className="font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200">
                             {Math.round(item.confidence * 100)}%
                           </span>
                         </div>
@@ -319,7 +319,7 @@ export const PatientArchiveView = ({
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => onSelectScan(item.scan_uuid)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 hover:bg-teal-100/80 border border-teal-200 text-teal-800 text-[11px] font-semibold transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/60 hover:bg-teal-100/80 dark:hover:bg-teal-900/60 border border-teal-200 dark:border-teal-800 text-teal-800 dark:text-teal-300 text-[11px] font-semibold transition-colors cursor-pointer"
                             title="Load in Dual-Viewer Workspace"
                           >
                             <Eye className="w-3 h-3" />
@@ -331,7 +331,7 @@ export const PatientArchiveView = ({
                               await onSelectScan(item.scan_uuid);
                               onOpenReport();
                             }}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-[11px] font-semibold transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition-colors cursor-pointer"
                             title="Open Diagnostic Report"
                           >
                             <FileText className="w-3 h-3" />

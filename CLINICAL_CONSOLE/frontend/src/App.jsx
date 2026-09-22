@@ -28,6 +28,34 @@ export function App() {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
+  // Dark Mode state with persistence in localStorage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem('quantum_dr_theme');
+      if (saved) return saved === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (e) {
+      return false;
+    }
+  });
+
+  // Synchronize 'dark' class on root <html> element
+  useEffect(() => {
+    try {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('quantum_dr_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('quantum_dr_theme', 'light');
+      }
+    } catch (e) {
+      console.warn('Could not persist theme to localStorage', e);
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
+
   // Initial load: fetch health and scan history
   useEffect(() => {
     loadHealthAndHistory();
@@ -128,9 +156,11 @@ export function App() {
 
   return (
     <div 
-      className="min-h-screen clinical-overview-wrapper text-slate-800 antialiased flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900 relative"
+      className="min-h-screen clinical-overview-wrapper text-slate-800 dark:text-slate-100 antialiased flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900 relative transition-colors duration-300"
       style={{
-        backgroundImage: "url('/image_e7bea0.jpg'), url('/image_f6ca80.jpg')",
+        backgroundImage: isDarkMode
+          ? "linear-gradient(rgba(10, 15, 29, 0.88), rgba(10, 15, 29, 0.92)), url('/image_e7bea0.jpg')"
+          : "linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.4)), url('/image_e7bea0.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
@@ -147,6 +177,8 @@ export function App() {
         hasActiveResult={!!activeResult}
         notificationCount={3}
         onOpenNotifications={() => setIsNotificationsOpen(true)}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={toggleDarkMode}
       />
 
       {/* Main View Container */}
