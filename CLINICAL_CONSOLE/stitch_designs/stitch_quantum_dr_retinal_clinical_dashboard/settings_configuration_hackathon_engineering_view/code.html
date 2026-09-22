@@ -1,0 +1,460 @@
+<!DOCTYPE html><html class="h-full bg-slate-50" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Quantum-DR | Settings &amp; Configuration</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Custom Emerald/Clinical Tones -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Ambient Styles -->
+<style data-purpose="ambient-background">
+  @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  .animate-bg-shift { animation: gradient-shift 15s ease infinite; background-size: 200% 200%; }
+  .bg-grid-pattern { background-size: 64px 64px; background-image: linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px); }
+</style>
+<style data-purpose="custom-range-styling">
+    /* Refined range inputs */
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #059669;
+      cursor: pointer;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4);
+      transition: transform 0.15s ease-in-out;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+  </style>
+<!-- END: Ambient Styles -->
+</head>
+<body class="min-h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-hidden">
+<!-- BEGIN: Ambient Background Layers -->
+<div class="fixed inset-0 pointer-events-none -z-10 bg-gradient-to-br from-[#e6f7f4] via-[#f0fdfa] to-[#dcfce7] animate-bg-shift">
+<div class="absolute inset-0 bg-grid-pattern"></div>
+</div>
+<div class="fixed top-12 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="fixed top-1/2 right-10 w-[30rem] h-[30rem] bg-teal-500/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- END: Ambient Background Layers -->
+<!-- BEGIN: Header & Navigation -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-emerald-100/80 shadow-sm px-6 lg:px-10 py-3.5" data-purpose="global-header">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+<!-- Brand & Title Lockup -->
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/20">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M2 12c2.5-4 6.5-7 10-7s7.5 3 10 7c-2.5 4-6.5 7-10 7s-7.5-3-10-7z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-lg font-bold tracking-tight text-slate-900 leading-none">Quantum-DR</h1>
+<span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">v1.0-RC</span>
+</div>
+<p class="text-xs text-slate-500 font-medium tracking-tight mt-0.5">AI for Healthier Sight • Hackathon Judge View</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav aria-label="Primary Navigation" class="hidden md:flex items-center gap-1.5 p-1 bg-slate-100/80 rounded-xl border border-slate-200/60">
+<a class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all" href="#">Dashboard</a>
+<a class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all" href="#">Workspace</a>
+<a class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all" href="#">Archive</a>
+<a class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all" href="#">Diagnostics</a>
+<a aria-current="page" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white text-emerald-700 shadow-sm border border-emerald-100" href="#">Settings</a>
+</nav>
+<!-- Telemetry Status Pills & Notification -->
+<div class="flex items-center gap-3">
+<!-- Backend Status Pill -->
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-medium">
+<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)]"></span></span>
+<span class="">Backend Active</span>
+</div>
+<!-- Notification Bell with Badge -->
+<button aria-label="System Notifications" class="relative p-2 rounded-xl text-slate-600 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors focus:outline-none" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white shadow-sm ring-2 ring-white">3</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: Header & Navigation -->
+<!-- BEGIN: Main Page Content -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-10 py-8" id="content">
+<!-- BEGIN: Hero Header & System Status -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200/80" data-purpose="hero-section">
+<div>
+<div class="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-emerald-700">
+<svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">System Configuration &amp; Engineering Parameters</span>
+</div>
+<h2 class="text-2xl lg:text-3xl font-extrabold tracking-tight mt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal-800 to-emerald-500">Settings &amp; Configuration</h2>
+<p class="text-sm text-slate-600 max-w-2xl mt-1 leading-relaxed">
+          Manage multimodal Gemini API keys, PennyLane-PyTorch hybrid model weights, and clinical decision detection thresholds.
+        </p>
+</div>
+<!-- Right Status Card -->
+<div class="inline-flex items-center gap-3 px-4 py-3 bg-white/95 border border-emerald-200 rounded-xl shadow-sm text-slate-700">
+<div class="relative h-9 w-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 shadow-[0_0_16px_rgba(16,185,129,0.35)]"><span class="animate-ping absolute inset-0 rounded-lg bg-emerald-400 opacity-25 pointer-events-none"></span>
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+</div>
+<div>
+<div class="text-[11px] uppercase tracking-wider font-bold text-slate-400">System Status</div>
+<div class="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+            All services operational
+            <svg class="w-3.5 h-3.5 text-emerald-600 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Hero Header & System Status -->
+<!-- BEGIN: Core Engineering Layout (3 Crisp Cards) -->
+<section class="mt-8 space-y-8" data-purpose="configuration-grid">
+<!-- Top Row: Card 1 & Card 2 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- CARD 1: Google Gemini API Management -->
+<article class="group relative bg-white/60 border border-white/60 shadow-[0_8px_32px_rgba(16,185,129,0.1)] rounded-2xl p-6 lg:p-7 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(16,185,129,0.15)] transition-all duration-300 flex flex-col justify-between backdrop-blur-md" data-purpose="gemini-api-card">
+<!-- Tooltip Popup -->
+<div class="pointer-events-none absolute -top-3 left-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-200 z-[100] bg-slate-900 text-white text-xs px-3.5 py-2 rounded-lg shadow-xl max-w-xs border border-slate-700">
+<span class="font-semibold text-emerald-400 block mb-0.5">Gemini Vision Service</span>
+            Configures Gemini 1.5 Flash multimodal vision &amp; report synthesis token channel.
+          </div>
+<div>
+<!-- Header of Card 1 -->
+<div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center p-2 shadow-sm shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+<!-- Google G Logo SVG -->
+<svg class="w-full h-full" viewBox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12c0 2.06.45 3.84 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
+</svg>
+</div>
+<div>
+<h3 class="text-base font-bold text-slate-900">Google Gemini API Management</h3>
+<p class="text-xs text-slate-500">Configure your Gemini API key for multimodal clinical report generation.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Connected
+              </span>
+</div>
+<!-- API Key Input Field -->
+<div class="mt-5">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5" for="gemini-key">Gemini API Key</label>
+<div class="relative rounded-xl border border-slate-200 bg-slate-50/70 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+<input aria-label="Google Gemini API Key" class="w-full bg-transparent border-0 py-2.5 pl-3.5 pr-10 text-xs font-mono text-slate-800 focus:ring-0 select-all" id="gemini-key" readonly="" type="password" value="AIzaSyB3189xK8912KlMnQv8Z4pLa98_SampleSecret">
+<button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1" title="Toggle visibility" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Status Indicator -->
+<div class="flex items-center justify-between text-xs mt-2 text-slate-500">
+<div class="flex items-center gap-1.5 text-emerald-700 font-medium">
+<svg class="w-4 h-4 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="">API key is valid and ready to use.</span>
+</div>
+<span class="text-[11px] font-mono text-slate-400">Validated: 19 Sep 2026, 10:18 AM</span>
+</div>
+</div>
+<!-- Model Used Feature Card -->
+<div class="mt-5 p-4 rounded-xl bg-slate-50/80 border border-slate-200/80">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Active Model Endpoint</span>
+<span class="text-xs font-bold text-slate-900 bg-white px-2.5 py-1 rounded-md border border-slate-200">Gemini 1.5 Flash</span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-xs">
+<div class="flex items-center gap-2 text-slate-700">
+<svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+<span class="">Multimodal Analysis</span>
+</div>
+<div class="flex items-center gap-2 text-slate-700">
+<svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+<span class="">Clinical Report Gen</span>
+</div>
+<div class="flex items-center gap-2 text-slate-700">
+<svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+<span class="">Image + Text Synthesis</span>
+</div>
+<div class="flex items-center gap-2 text-slate-700">
+<svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+<span class="">HIPAA Compliant Processing</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Buttons -->
+<div class="flex items-center gap-3 mt-6 pt-4 border-t border-slate-100">
+<button class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold tracking-wide transition shadow-sm shadow-emerald-600/20" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Update API Key</span>
+</button>
+<button class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold tracking-wide transition" type="button">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Test Connection</span>
+</button>
+</div>
+</article>
+<!-- CARD 2: Model Configuration -->
+<article class="group relative bg-white/60 border border-white/60 shadow-[0_8px_32px_rgba(16,185,129,0.1)] rounded-2xl p-6 lg:p-7 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(16,185,129,0.15)] transition-all duration-300 flex flex-col justify-between backdrop-blur-md" data-purpose="model-config-card">
+<!-- Tooltip Popup -->
+<div class="pointer-events-none absolute -top-3 left-10 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-200 z-[100] bg-slate-900 text-white text-xs px-3.5 py-2 rounded-lg shadow-xl max-w-xs border border-slate-700">
+<span class="font-semibold text-teal-400 block mb-0.5">Quantum Hybrid Engine</span>
+            Frozen hybrid weights with variational quantum circuits calibrated for high sensitivity.
+          </div>
+<div>
+<!-- Header of Card 2 -->
+<div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 shadow-sm shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<h3 class="text-base font-bold text-slate-900">Model Configuration</h3>
+<p class="text-xs text-slate-500">Loaded model weights, framework version, and architecture details.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Model Loaded
+              </span>
+</div>
+<!-- Model Weight File Banner -->
+<div class="mt-5 p-3.5 rounded-xl bg-slate-900 text-white flex items-center justify-between shadow-inner">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="font-mono text-xs tracking-tight font-medium text-emerald-300">quantum_dr_model.pth</span>
+</div>
+<span class="font-mono text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">v1.0.0</span>
+</div>
+<!-- Specifications Grid / Table -->
+<div class="mt-4 border border-slate-200/80 rounded-xl overflow-hidden divide-y divide-slate-100 bg-white">
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs bg-slate-50/50">
+<span class="text-slate-400 font-medium">Path</span>
+<span class="col-span-2 font-mono text-slate-700 truncate">/models/quantum_dr_model.pth</span>
+</div>
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs">
+<span class="text-slate-400 font-medium">File Size</span>
+<span class="col-span-2 font-mono text-slate-800">245 MB</span>
+</div>
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs bg-slate-50/50">
+<span class="text-slate-400 font-medium">Framework</span>
+<span class="col-span-2 font-medium text-slate-800">PyTorch 2.1.0 + PennyLane 0.35</span>
+</div>
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs">
+<span class="text-slate-400 font-medium">Model Type</span>
+<span class="col-span-2 font-medium text-emerald-700">Hybrid VQC (4-Qubit) + Classical U-Net</span>
+</div>
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs bg-slate-50/50">
+<span class="text-slate-400 font-medium">Input Size</span>
+<span class="col-span-2 font-mono text-slate-800">224 × 224 × 3 (RGB Retinal)</span>
+</div>
+<div class="grid grid-cols-3 px-4 py-2.5 text-xs">
+<span class="text-slate-400 font-medium">Output Classes</span>
+<span class="col-span-2 font-medium text-slate-800">2 (Healthy / Diabetic Retinopathy)</span>
+</div>
+</div>
+</div>
+<!-- Bottom Action -->
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+<span class="text-xs text-slate-500">Last Synced: Today at 08:30 AM</span>
+<a class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition" href="#">
+<span class="">View Architecture Details</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+</div>
+</article>
+</div>
+<!-- Bottom Row: Card 3 - Detection Thresholds (Spanning Full Width) -->
+<article class="group relative bg-white/60 border border-white/60 shadow-[0_8px_32px_rgba(16,185,129,0.1)] rounded-2xl p-6 lg:p-8 hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(16,185,129,0.15)] transition-all duration-300 backdrop-blur-md" data-purpose="detection-thresholds-card">
+<!-- Header of Card 3 -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shadow-sm shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<h3 class="text-base font-bold text-slate-900">Detection Thresholds &amp; Decision Boundaries</h3>
+<p class="text-xs text-slate-500">Adjust the model confidence triggers for clinical referral screening and high-urgency alerts.</p>
+</div>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition" type="button">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">Reset to Default</span>
+</button>
+</div>
+<!-- Sliders Container -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-6">
+<!-- Slider 1: Diabetic Retinopathy (Positive) Threshold -->
+<div class="relative p-5 rounded-xl bg-slate-50/70 border border-slate-200/80 group">
+<!-- Tooltip Popup for Slider 1 -->
+<div class="pointer-events-none absolute -top-8 left-4 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-150 z-[100] bg-slate-900 text-white text-[11px] px-3 py-1 rounded shadow-lg">
+              Scans with model confidence above this threshold will be flagged as positive for clinical review.
+            </div>
+<div class="flex items-start justify-between gap-4 mb-3">
+<div>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-700">Diabetic Retinopathy (Positive) Threshold</span>
+<p class="text-xs text-slate-500 mt-0.5">Primary classification cutoff for positive referral.</p>
+</div>
+<div class="text-right">
+<span class="text-lg font-mono font-black text-emerald-700">0.65</span>
+<span class="text-xs font-semibold text-slate-400 block">(65%)</span>
+</div>
+</div>
+<!-- Custom Visual Slider Component -->
+<div class="py-2">
+<label class="sr-only" for="dr-threshold">DR Positive Threshold</label>
+<input class="w-full h-2 rounded-lg bg-emerald-100 cursor-pointer accent-emerald-600" id="dr-threshold" max="1.00" min="0.00" step="0.01" type="range" value="0.65">
+<div class="flex justify-between text-[10px] font-mono text-slate-400 mt-1.5">
+<span class="">0.00 (High Sensitivity)</span>
+<span class="">0.50</span>
+<span class="">1.00 (High Specificity)</span>
+</div>
+</div>
+<!-- Badges -->
+<div class="mt-3 pt-3 border-t border-slate-200/60 flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">Clinical Recommendation:</span>
+<span class="text-[11px] font-semibold text-emerald-800 bg-emerald-100/70 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                Recommended: 0.60 – 0.70
+              </span>
+</div>
+</div>
+<!-- Slider 2: High-Risk Alert Threshold -->
+<div class="relative p-5 rounded-xl bg-slate-50/70 border border-slate-200/80 group">
+<!-- Tooltip Popup for Slider 2 -->
+<div class="pointer-events-none absolute -top-8 left-4 opacity-0 group-hover:opacity-100 group-hover:-translate-y-2 transition-all duration-150 z-[100] bg-slate-900 text-white text-[11px] px-3 py-1 rounded shadow-lg">
+              Adjusts the baseline for High-Risk flags and urgent ophthalmic referral alerts.
+            </div>
+<div class="flex items-start justify-between gap-4 mb-3">
+<div>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-700">High-Risk Alert Threshold</span>
+<p class="text-xs text-slate-500 mt-0.5">Triggers immediate ophthalmologist consult notification.</p>
+</div>
+<div class="text-right">
+<span class="text-lg font-mono font-black text-rose-600">0.85</span>
+<span class="text-xs font-semibold text-slate-400 block">(85%)</span>
+</div>
+</div>
+<!-- Custom Visual Slider Component -->
+<div class="py-2">
+<label class="sr-only" for="highrisk-threshold">High-Risk Threshold</label>
+<input class="w-full h-2 rounded-lg bg-rose-100 cursor-pointer accent-rose-600" id="highrisk-threshold" max="1.00" min="0.00" step="0.01" type="range" value="0.85">
+<div class="flex justify-between text-[10px] font-mono text-slate-400 mt-1.5">
+<span class="">0.00</span>
+<span class="">0.50</span>
+<span class="">1.00 (Critical Escalation)</span>
+</div>
+</div>
+<!-- Badges -->
+<div class="mt-3 pt-3 border-t border-slate-200/60 flex items-center justify-between">
+<span class="text-[11px] font-medium text-slate-500">Critical Range:</span>
+<span class="text-[11px] font-semibold text-rose-800 bg-rose-100/70 px-2.5 py-0.5 rounded-full border border-rose-200">
+                Recommended: 0.80 – 0.90
+              </span>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- END: Core Engineering Layout -->
+</main>
+<!-- END: Main Page Content -->
+<!-- BEGIN: Persistent Telemetry Footer -->
+<footer class="mt-auto border-t border-slate-200 bg-white/95 backdrop-blur px-6 py-3 text-xs text-slate-500 shadow-sm" data-purpose="telemetry-footer">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 font-mono">
+<!-- Model specs -->
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-slate-700 font-semibold">Model:</span>
+<span class="text-slate-600">Hybrid PyTorch-PennyLane (4-Qubit VQC + U-Net)</span>
+</div>
+<!-- Quick Links Pills -->
+<div class="flex items-center gap-1 font-sans text-xs">
+<a class="px-2 py-0.5 rounded hover:text-emerald-700 hover:bg-emerald-50 transition" href="#">Dashboard</a>
+<span class="text-slate-300">•</span>
+<a class="px-2 py-0.5 rounded hover:text-emerald-700 hover:bg-emerald-50 transition" href="#">Workspace</a>
+<span class="text-slate-300">•</span>
+<a class="px-2 py-0.5 rounded hover:text-emerald-700 hover:bg-emerald-50 transition" href="#">Archive</a>
+<span class="text-slate-300">•</span>
+<a class="px-2 py-0.5 rounded hover:text-emerald-700 hover:bg-emerald-50 transition" href="#">Diagnostics</a>
+<span class="text-slate-300">•</span>
+<a class="px-2 py-0.5 rounded text-emerald-700 font-bold bg-emerald-50" href="#">Settings</a>
+</div>
+<!-- Telemetry stats & Copyright -->
+<div class="flex items-center gap-2.5 text-[11px] text-slate-500">
+<span class="text-emerald-700 font-bold">Acc: 95.32% | ROC-AUC: 0.977</span>
+<span class="text-slate-300">•</span>
+<span class="">20 Sep 2026 | 10:24 AM UTC</span>
+<span class="text-slate-300">•</span>
+<span class="font-bold text-slate-700">© 2026 QUANTUM-DR CLINICAL CORE</span>
+</div>
+</div>
+</footer>
+<!-- END: Persistent Telemetry Footer -->
+
+
+</body></html>

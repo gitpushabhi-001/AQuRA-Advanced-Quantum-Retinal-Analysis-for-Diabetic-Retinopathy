@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Archive - Clinical EHR | Quantum-DR</title>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Micro-Styles -->
+<style>
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-teal-50/70 via-[#f4fffc] to-teal-100/40 min-h-screen text-slate-800 antialiased transform-gpu font-sans flex flex-col relative overflow-x-hidden">
+<!-- Subtle Radial Glow Background Layer -->
+<div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+<div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-teal-200/30 blur-[130px] rounded-full"></div>
+<div class="absolute top-1/3 -right-40 w-[600px] h-[600px] bg-cyan-100/40 blur-[140px] rounded-full"></div>
+<div class="absolute bottom-10 -left-40 w-[500px] h-[500px] bg-emerald-100/40 blur-[120px] rounded-full"></div>
+</div>
+<!-- BEGIN: Full-Width Top Navigation Bar (Matching Retinal Screening Workspace) -->
+<header class="w-full bg-white/95 backdrop-blur-md border-b border-teal-100 sticky top-0 z-50 px-6 lg:px-10 py-3.5 shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+<!-- Brand Logo & Main Navigation Links -->
+<div class="flex items-center gap-8">
+<!-- Logo -->
+<a class="flex items-center gap-3 group" href="#">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-105 transition-transform duration-200">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-xl font-bold tracking-tight text-slate-900 leading-tight">Quantum-DR</h1>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-teal-100/80 text-teal-800">EHR</span>
+</div>
+<p class="text-xs font-medium text-teal-600 tracking-wider">AI for Healthier Sight</p>
+</div>
+</a>
+<!-- Horizontal Top Nav Links -->
+<nav class="hidden md:flex items-center gap-1 pl-4 border-l border-slate-200/80">
+<a class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-teal-700 hover:bg-teal-50/70 transition-colors" href="#">Clinical Overview</a>
+<a class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-teal-700 hover:bg-teal-50/70 transition-colors" href="#">Diagnostic Workspace</a>
+<a class="px-3.5 py-2 rounded-xl text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200/70 shadow-sm transition-colors" href="#">Patient Archive</a>
+<a class="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-teal-700 hover:bg-teal-50/70 transition-colors" href="#">Node Topology</a>
+</nav>
+</div>
+<!-- Right Controls: Status, Notifications, Clinician Profile -->
+<div class="flex items-center gap-3"><div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-700"><span class="w-2 h-2 rounded-full bg-teal-500 animate-ping"></span><span>Backend Active</span></div><button aria-label="Notifications" class="relative p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors" type="button"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center leading-none">3</span></button></div></div>
+</header>
+<!-- END: Top Navigation Header -->
+<!-- BEGIN: Single-Column Full-Width Page Container (No Left Sidebar) -->
+<main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col space-y-6">
+<!-- BEGIN: Header with HIPAA Compliance Badge & Eye Graphic Watermark -->
+<section class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 overflow-hidden rounded-2xl isolate">
+<!-- Crucial Eye Watermark Background Image -->
+<img alt="Retinal Eye Graphic" class="absolute -top-12 -right-5 w-[400px] opacity-[0.06] pointer-events-none mix-blend-multiply -z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi7KAgoMF2EKJky1DTVUAkEddUP7uJvu8zlTzoELC2j6Zj9VNejkEogkz-YeCet7y9xirtSmSnfnQ8MF6EwsY5Oxg3_wHjf28AUWadBmeQeqRU51939T28YcSJm3xTicBxgVm5a8WM2Ov_x61Mh4ODJeIJD0iLOm5MjThSKuYmMUxlczT8I-TXox3NHe11bbfhY1hG1AIAaexxNZ384bcgacF1QR4SoMEveNeY8DR67a7laxP3skdZ"/>
+<div class="relative z-10">
+<p class="text-xs font-semibold uppercase tracking-wider text-teal-700">PATIENT MANAGEMENT &amp; RECORDS</p>
+<h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mt-0.5">Patient Archive</h2>
+<p class="text-sm text-slate-500 mt-1">Secure longitudinal records, retinal scans, and AI-powered screening history.</p>
+</div>
+<!-- HIPAA Compliance Pill Badge -->
+<div class="relative z-10 rounded-2xl px-4 py-3 flex items-center gap-3.5 max-w-md">
+<div class="w-9 h-9 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 flex-shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h4 class="text-xs font-bold text-slate-800">All data is encrypted and HIPAA compliant</h4>
+<p class="text-[11px] text-slate-500 leading-snug">Patient data is securely stored and accessed only by authorized personnel.</p>
+</div>
+</div>
+</section>
+<!-- END: Header with HIPAA Compliance Badge -->
+<!-- BEGIN: Simplified Filter Row -->
+<section class="bg-white/90 backdrop-blur-sm border border-teal-100 rounded-2xl p-3.5 md:p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+<!-- Left: Prominent Search & High-Risk Toggle -->
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto flex-1">
+<!-- Prominent Wide Search Bar with Ctrl + K -->
+<div class="relative w-full sm:max-w-lg">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full pl-10 pr-20 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-600 transition-all shadow-inner" placeholder="Search by Scan ID or Patient Name..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+<kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-semibold text-slate-400 bg-white border border-slate-200 rounded-md shadow-xs">Ctrl + K</kbd>
+</div>
+</div>
+<!-- Standout Filter Toggle Button: High-Risk -->
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100/70 transition-all duration-200 shadow-sm whitespace-nowrap" type="button">
+<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+<svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Filter: High-Risk
+        </button>
+</div>
+<!-- Right: Export Action Dropdown Button -->
+<div class="flex items-center gap-2 w-full md:w-auto justify-end">
+<button class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm" type="button">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Export
+          <svg class="w-3.5 h-3.5 text-slate-400 ml-0.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</section>
+<!-- END: Simplified Filter Row -->
+<!-- BEGIN: 2-Column Content Grid in Full-Width Container (Table + Preview Panel) -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+<!-- BEGIN: Left / Main Column (Table Container) -->
+<div class="xl:col-span-8 bg-white border border-teal-100 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 border-b border-slate-100 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+<th class="py-3.5 px-4 font-semibold" scope="col">SCAN ID</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">DATE &amp; TIME</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">DIAGNOSIS</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">CONFIDENCE SCORE</th>
+<th class="py-3.5 px-4 font-semibold" scope="col">STATUS</th>
+<th class="py-3.5 px-4 font-semibold text-right" scope="col">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-sm">
+<!-- Row 1: PX-9821 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9821</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">19 Sep 2026</div>
+<div class="text-slate-400">10:24 AM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    No DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">97.1%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Normal
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 2: PX-9817 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9817</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">18 Sep 2026</div>
+<div class="text-slate-400">02:15 PM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                    Mild DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">93.4%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    Follow-up
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 3: PX-9804 (Active Selected Item) -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-teal-50/60 border-l-4 border-l-teal-600">
+<td class="py-3.5 px-4 font-bold text-teal-900">PX-9804</td>
+<td class="py-3.5 px-4 text-slate-700 text-xs">
+<div class="font-medium">18 Sep 2026</div>
+<div class="text-slate-400">04:45 PM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                    Moderate DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-semibold text-slate-800 font-mono">89.2%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    High-Risk
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-600 text-white rounded-lg text-xs font-semibold shadow-sm">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 4: PX-9785 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9785</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">17 Sep 2026</div>
+<div class="text-slate-400">11:20 AM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    No DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">96.8%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Normal
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 5: PX-9750 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9750</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">16 Sep 2026</div>
+<div class="text-slate-400">03:10 PM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    Severe DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">91.7%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    High-Risk
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 6: PX-9736 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9736</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">16 Sep 2026</div>
+<div class="text-slate-400">09:05 AM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                    Mild DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">87.6%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    Follow-up
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 7: PX-9701 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9701</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">15 Sep 2026</div>
+<div class="text-slate-400">01:50 PM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
+                    Proliferative DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">94.9%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                    High-Risk
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+<!-- Row 8: PX-9688 -->
+<tr class="transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:bg-white cursor-pointer bg-white">
+<td class="py-3.5 px-4 font-semibold text-slate-800">PX-9688</td>
+<td class="py-3.5 px-4 text-slate-600 text-xs">
+<div class="">14 Sep 2026</div>
+<div class="text-slate-400">05:32 PM</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    No DR
+                  </span>
+</td>
+<td class="py-3.5 px-4 font-medium text-slate-700 font-mono">98.2%</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Normal
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+<button class="transition-all duration-300 ease-in-out hover:scale-105 px-3 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold">
+                    View
+                  </button>
+<button aria-label="More options" class="transition-all duration-300 ease-in-out hover:scale-105 p-1 text-slate-400 hover:text-slate-600 rounded-lg">
+                    •••
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Pagination Controls -->
+<div class="p-4 border-t border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+<span class="">Showing <strong class="text-slate-700">1–8</strong> of <strong class="text-slate-700">3,218</strong> records</span>
+<div class="flex items-center gap-1.5">
+<button aria-label="Previous Page" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-teal-600 text-white font-semibold shadow-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">4</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">5</button>
+<span class="px-1 text-slate-400">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">403</button>
+<button aria-label="Next Page" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Rows Per Page Selector -->
+<div class="flex items-center gap-2">
+<span class="">Rows per page:</span>
+<select class="py-1 px-2.5 border border-slate-200 rounded-lg text-xs bg-white text-slate-700 focus:ring-teal-500 focus:border-teal-500 font-medium">
+<option selected="">8</option>
+<option>16</option>
+<option>24</option>
+<option>48</option>
+</select>
+</div>
+</div>
+</div>
+<!-- END: Left / Main Column -->
+<!-- BEGIN: Right Column / Slide-Out Preview Panel -->
+<aside class="xl:col-span-4 bg-white border border-teal-200/80 rounded-2xl shadow-lg p-5 flex flex-col space-y-5">
+<!-- Card Header -->
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div class="flex items-center gap-2.5">
+<h3 class="text-lg font-bold text-slate-900 tracking-tight">PX-9804</h3>
+<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-50 text-orange-700 border border-orange-200">
+              Moderate DR
+            </span>
+</div>
+<button aria-label="Close Preview" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Tab Navigation -->
+<div class="flex items-center border-b border-slate-100 text-xs font-semibold">
+<button class="pb-2.5 px-3 border-b-2 border-teal-600 text-teal-700 font-bold transition-colors">Overview</button>
+<button class="pb-2.5 px-3 text-slate-500 hover:text-slate-700 transition-colors">AI Analysis</button>
+<button class="pb-2.5 px-3 text-slate-500 hover:text-slate-700 transition-colors">Clinical Report</button>
+<button class="pb-2.5 px-3 text-slate-500 hover:text-slate-700 transition-colors">History</button>
+</div>
+<!-- Retinal Scan Viewer Preview Carousel -->
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-950 border border-slate-200 shadow-inner group">
+<!-- Retinal Scan Fundus Image -->
+<div class="w-full h-full flex items-center justify-center overflow-hidden">
+<img alt="Retinal Scan PX-9804" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg7_01YantGS-P29TUxoHXUKghincFtcjT1zXRH1uWaunFP7avx9tyUy8jWbHqISGPlk59O_PyC7439ISpxUz6dBrur7JSLIBCumGXegTqgPaWYHiqByzHUYABMQWOKVPjZ_ObXkMXfN0RLx2M0C6UsCPEjLwi3xpTQetbmDjJRzHqUloL9_RECVr8o8ylVboEO4JGMK-ZEZ8G7RdgkuYYt1TneS0Fhc877QMhD2WSW8rsY3kJA-JF"/>
+</div>
+<!-- Left Navigation Chevron -->
+<button aria-label="Previous Scan" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/60 backdrop-blur-sm text-white flex items-center justify-center hover:bg-slate-900 transition-colors shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Right Navigation Chevron -->
+<button aria-label="Next Scan" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/60 backdrop-blur-sm text-white flex items-center justify-center hover:bg-slate-900 transition-colors shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Carousel Pagination Dots -->
+<div class="absolute bottom-2.5 inset-x-0 flex justify-center items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-teal-400"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-white/60"></span>
+</div>
+</div>
+<!-- Demographics Grid Summary -->
+<div class="grid grid-cols-2 gap-y-3 gap-x-4 bg-slate-50/70 p-3.5 rounded-xl border border-slate-100 text-xs">
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Patient Name</p>
+<p class="font-bold text-slate-800 mt-0.5">Suresh Patel</p>
+</div>
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Scan Date</p>
+<p class="font-bold text-slate-800 mt-0.5">18 Sep 2026, 04:45 PM</p>
+</div>
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Patient ID</p>
+<p class="font-bold text-slate-800 mt-0.5">PX-9804</p>
+</div>
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Diagnosis</p>
+<p class="font-bold text-orange-600 mt-0.5">Moderate DR</p>
+</div>
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Age / Gender</p>
+<p class="font-bold text-slate-800 mt-0.5">49 yrs / Male</p>
+</div>
+<div>
+<p class="text-slate-400 text-[10px] uppercase font-semibold">Confidence</p>
+<p class="font-bold text-teal-700 font-mono mt-0.5">89.2%</p>
+</div>
+</div>
+<!-- Bottom Action Buttons -->
+<div class="flex flex-col gap-2.5 pt-1">
+<!-- Primary Standout CTA -->
+<button class="bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-lg shadow-teal-600/20 py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] text-sm" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            View Full Analysis
+          </button>
+<!-- Secondary Action CTA -->
+<button class="w-full bg-white hover:bg-slate-50 text-slate-700 font-semibold border border-slate-200 py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm shadow-sm" type="button">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Download Report
+          </button>
+</div>
+</aside>
+<!-- END: Right Column -->
+</section>
+<!-- END: 2-Column Content Grid -->
+</main>
+<!-- END: Single-Column Full-Width Page Container -->
+<!-- BEGIN: Full-Width Clean Clinical Telemetry Footer -->
+<footer class="w-full bg-white/80 backdrop-blur-md border-t border-teal-100/90 py-3.5 px-6 lg:px-10 mt-auto">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 font-mono">
+<div class="flex items-center gap-2 tracking-wide">
+<span class="w-2 h-2 rounded-full bg-teal-500"></span>
+<span class="">SYS-ID: <span class="text-slate-700 font-medium">QDR-8840-X</span></span>
+<span class="text-slate-300">•</span>
+<span class="">LATENCY: <span class="text-slate-700 font-medium">1.4ms</span></span>
+<span class="text-slate-300">•</span>
+<span class="">CHANNEL: <span class="text-teal-700 font-medium">HL7-FHIR SECURE</span></span>
+</div>
+<div class="text-[11px] font-medium tracking-wide text-slate-400">
+        SURGICAL TELEMETRY OS • © 2026 QUANTUM-DR CLINICAL CORE
+      </div>
+</div>
+</footer>
+<!-- END: Clinical Telemetry Footer -->
+</body></html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quantum-DR — System Diagnostics &amp; Model Telemetry</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-animations">
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.18; transform: scale(1); }
+      50% { opacity: 0.28; transform: scale(1.06); }
+    }
+    .ambient-glow {
+      animation: pulse-slow 8s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen relative flex flex-col selection:bg-emerald-500 selection:text-white">
+<!-- BEGIN: AmbientQuantumGlow -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-32 -left-32 w-[680px] h-[680px] bg-emerald-300/20 rounded-full blur-3xl ambient-glow"></div>
+<div class="absolute top-1/4 right-0 w-[580px] h-[580px] bg-teal-300/15 rounded-full blur-3xl ambient-glow" style="animation-delay: 3s;"></div>
+<div class="absolute -bottom-32 left-1/3 w-[720px] h-[720px] bg-emerald-400/15 rounded-full blur-3xl ambient-glow" style="animation-delay: 5s;"></div>
+</div>
+<!-- END: AmbientQuantumGlow -->
+<!-- BEGIN: MainNavbar -->
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<!-- Brand & Product Title with Green Eye Icon -->
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-md shadow-emerald-600/20 text-white flex-shrink-0">
+<!-- Stylized Eye Retinal Icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<span class="text-lg font-bold tracking-tight text-slate-900">Quantum-DR</span>
+<span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">v2.4.0</span>
+</div>
+<p class="text-[11px] text-slate-500 font-medium leading-none mt-0.5">AI for Healthier Sight • Hackathon Judge View</p>
+</div>
+</div>
+<!-- Quick Status Indicators -->
+<div class="flex items-center space-x-4">
+<!-- Live Backend Pill -->
+<div class="flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full shadow-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-xs font-semibold text-emerald-800 tracking-tight">Backend Active</span>
+</div>
+<!-- Notification Bell with badge "3" -->
+<div class="relative p-2 text-slate-500 hover:text-slate-800 transition cursor-pointer" title="3 pending notifications">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute top-1 right-1 w-4 h-4 bg-emerald-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">3</span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: MainNavbar -->
+<!-- BEGIN: ContentArea -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-6 py-8 relative z-10">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-6 border-b border-slate-200/80 gap-4">
+<div>
+<span class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-1.5 block">SYSTEM MONITORING &amp; PERFORMANCE</span>
+<h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">System Diagnostics</h1>
+<p class="text-sm text-slate-600 mt-1">Real-time hybrid quantum-classical hardware monitoring, pipeline telemetry, and optimization metrics for Quantum-DR.</p>
+</div>
+<!-- Right Metadata Badge & Status -->
+<div class="flex items-center space-x-4 self-start md:self-auto">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] font-medium uppercase tracking-wider text-slate-400">Timestamp</p>
+<p class="text-xs font-semibold text-slate-700 font-mono">20 Sep 2026 | 10:24 AM</p>
+</div>
+<div class="inline-flex items-center space-x-2 bg-white border border-emerald-200/90 shadow-xs px-3.5 py-2 rounded-xl text-emerald-700 font-semibold text-xs hover:border-emerald-300 transition cursor-default">
+<svg class="w-4 h-4 text-emerald-600 animate-pulse" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Live Telemetry</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+</div>
+</div>
+</div>
+<!-- BEGIN: DualQuantumClassicalEngine (Row 1) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" data-purpose="engine-architecture">
+<!-- Engine Card 1: PennyLane Quantum Module -->
+<article class="group relative bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-[0_12px_32px_rgba(16,185,129,0.12)] hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300">
+<!-- Floating Tooltip for Judges -->
+<div class="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none absolute -top-3.5 right-6 z-20 bg-slate-900 text-white text-[11px] font-mono px-3 py-1.5 rounded-md shadow-lg border border-slate-700">
+          PennyLane + PyTorch QNode execution engine
+        </div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center space-x-3.5">
+<div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-xs">
+<!-- Quantum Chip Icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="16" x="4" y="4"></rect>
+<rect height="6" width="6" x="9" y="9"></rect>
+<path d="M9 1v3m6-3v3m-6 16v3m6-3v3M1 9h3m0 6H1m19-6h3m-3 6h3"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h3 class="text-base font-bold text-slate-900 tracking-tight">PennyLane Quantum Module</h3>
+<span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-100/70 text-emerald-800 rounded-full">Simulator</span>
+</div>
+<p class="text-xs font-medium text-slate-500 mt-0.5">Running on <span class="font-semibold text-slate-700">CPU (Host-Simulated QPU)</span></p>
+</div>
+</div>
+</div>
+<!-- Spec Banner -->
+<div class="text-xs font-mono text-slate-600 bg-slate-50/90 p-3 rounded-xl border border-slate-100 mb-5">
+          Variational Quantum Circuit (VQC) • <span class="text-emerald-700 font-semibold">4 Qubits</span> • CZ-Ring Topology
+        </div>
+<!-- Sparkline and Usage -->
+<div class="flex items-end justify-between pt-2 border-t border-slate-100">
+<div>
+<span class="text-[11px] font-medium uppercase text-slate-400 block tracking-wider">Host Thread Load</span>
+<span class="text-2xl font-bold font-mono text-slate-900">32<span class="text-sm font-normal text-slate-500">%</span></span>
+</div>
+<!-- Green Sparkline -->
+<div class="w-36 h-10">
+<svg class="w-full h-full text-emerald-500" fill="none" viewbox="0 0 100 30">
+<path d="M0 25 L15 22 L30 26 L45 10 L60 18 L75 8 L90 20 L100 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M0 25 L15 22 L30 26 L45 10 L60 18 L75 8 L90 20 L100 12 V 30 H 0 Z" fill="currentColor" fill-opacity="0.08"></path>
+</svg>
+</div>
+</div>
+</article>
+<!-- Engine Card 2: Classical U-Net Module -->
+<article class="group relative bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-[0_12px_32px_rgba(16,185,129,0.12)] hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300">
+<!-- Floating Tooltip for Judges -->
+<div class="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none absolute -top-3.5 right-6 z-20 bg-slate-900 text-white text-[11px] font-mono px-3 py-1.5 rounded-md shadow-lg border border-slate-700">
+          PyTorch CUDA acceleration with TensorRT optimization
+        </div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center space-x-3.5">
+<div class="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-xs">
+<!-- Neural/GPU Tensor Icon -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="14" rx="2" width="20" x="2" y="3"></rect>
+<line x1="8" x2="16" y1="21" y2="21"></line>
+<line x1="12" x2="12" y1="17" y2="21"></line>
+<circle cx="8" cy="10" r="1.5"></circle>
+<circle cx="16" cy="10" r="1.5"></circle>
+</svg>
+</div>
+<div>
+<div class="flex items-center space-x-2">
+<h3 class="text-base font-bold text-slate-900 tracking-tight">Classical U-Net Module</h3>
+<span class="px-2 py-0.5 text-[10px] font-semibold bg-teal-100/70 text-teal-800 rounded-full">Production</span>
+</div>
+<p class="text-xs font-medium text-slate-500 mt-0.5">Running on <span class="font-semibold text-slate-700">GPU (CUDA 12.2)</span></p>
+</div>
+</div>
+</div>
+<!-- Spec Banner -->
+<div class="text-xs font-mono text-slate-600 bg-slate-50/90 p-3 rounded-xl border border-slate-100 mb-5">
+          Retinal Feature Extraction • <span class="text-teal-700 font-semibold">Mixed Precision Enabled</span> • TensorRT FP16
+        </div>
+<!-- Sparkline and Usage -->
+<div class="flex items-end justify-between pt-2 border-t border-slate-100">
+<div>
+<span class="text-[11px] font-medium uppercase text-slate-400 block tracking-wider">CUDA Core Compute</span>
+<span class="text-2xl font-bold font-mono text-slate-900">78<span class="text-sm font-normal text-slate-500">%</span></span>
+</div>
+<!-- Green Sparkline -->
+<div class="w-36 h-10">
+<svg class="w-full h-full text-teal-600" fill="none" viewbox="0 0 100 30">
+<path d="M0 20 L20 18 L35 24 L55 5 L70 14 L85 6 L100 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M0 20 L20 18 L35 24 L55 5 L70 14 L85 6 L100 12 V 30 H 0 Z" fill="currentColor" fill-opacity="0.08"></path>
+</svg>
+</div>
+</div>
+</article>
+</section>
+<!-- END: DualQuantumClassicalEngine -->
+<!-- BEGIN: MainTelemetryGrid (Row 2) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Card 1: Training & Optimization Metrics (lg:col-span-4) -->
+<section class="lg:col-span-4 bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-[0_12px_32px_rgba(16,185,129,0.12)] hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" data-purpose="training-metrics">
+<div>
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center space-x-2">
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="font-bold text-slate-900 text-base">Training &amp; Optimization Metrics</h2>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+              Completed
+            </span>
+</div>
+<!-- Highlight KPI Stats -->
+<div class="grid grid-cols-3 gap-2.5 mb-5">
+<!-- Training Time -->
+<div class="bg-slate-50/80 border border-slate-100 rounded-xl p-3 text-center">
+<div class="w-7 h-7 mx-auto mb-1 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Training Time</span>
+<span class="text-sm font-extrabold text-slate-800 font-mono">14.47 min</span>
+</div>
+<!-- Accuracy -->
+<div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-3 text-center">
+<div class="w-7 h-7 mx-auto mb-1 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] text-emerald-800 font-semibold uppercase tracking-wider block">Final Accuracy</span>
+<span class="text-sm font-extrabold text-emerald-900 font-mono">95.32%</span>
+</div>
+<!-- Best Model AUC -->
+<div class="bg-slate-50/80 border border-slate-100 rounded-xl p-3 text-center">
+<div class="w-7 h-7 mx-auto mb-1 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Best (AUC)</span>
+<span class="text-sm font-extrabold text-slate-800 font-mono">0.977</span>
+</div>
+</div>
+<!-- Hyperparameters & Precision Table -->
+<div class="space-y-2.5 font-mono text-xs">
+<div class="group relative flex items-center justify-between p-2.5 bg-slate-50 rounded-xl hover:bg-emerald-50/50 transition cursor-help border border-slate-100/60">
+<span class="text-slate-600 font-sans font-medium text-xs flex items-center">
+                Mixed Precision
+                <svg class="w-3.5 h-3.5 ml-1 text-slate-400 inline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<div class="flex items-center space-x-2">
+<span class="font-bold text-slate-800">FP16 / FP32</span>
+<span class="px-1.5 py-0.5 text-[9px] font-bold bg-emerald-100 text-emerald-700 rounded">Enabled</span>
+</div>
+<!-- Tooltip on hover -->
+<div class="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-slate-900 text-white text-[11px] font-sans rounded-md shadow-xl z-20">
+                Utilizes FP16 for speed and FP32 for numerical stability across VQC gradient steps.
+              </div>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100/60">
+<span class="text-slate-600 font-sans font-medium text-xs">Batch Size</span>
+<span class="font-bold text-slate-800">32</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100/60">
+<span class="text-slate-600 font-sans font-medium text-xs">Optimizer</span>
+<span class="font-bold text-slate-800">AdamW (lr=3e-4)</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100/60">
+<span class="text-slate-600 font-sans font-medium text-xs">Loss Function</span>
+<span class="font-bold text-slate-800">Focal + Cross-Entropy</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-center">
+<span class="text-[11px] text-slate-500 font-mono">Quantum Ansatz: <strong class="text-slate-700 font-semibold font-sans">StronglyEntanglingLayers (L=3)</strong></span>
+</div>
+</section>
+<!-- Card 2: Inference Latency & Schedulers (lg:col-span-4) -->
+<section class="lg:col-span-4 bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-[0_12px_32px_rgba(16,185,129,0.12)] hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" data-purpose="latency-gauge">
+<div>
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-2">
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="font-bold text-slate-900 text-base">Inference Latency</h2>
+</div>
+<span class="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+<span>Live</span>
+</span>
+</div>
+<!-- Semicircular Arc Gauge Container -->
+<div class="relative flex flex-col items-center justify-center my-3">
+<svg class="w-60 h-32 overflow-visible" viewbox="0 0 200 115">
+<defs>
+<lineargradient id="latencyGradientFresh" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="60%" stop-color="#059669"></stop>
+<stop offset="100%" stop-color="#0d9488"></stop>
+</lineargradient>
+</defs>
+<!-- Background Arc (0 to 500ms scale) -->
+<path d="M 20 105 A 80 80 0 0 1 180 105" fill="none" stroke="#f1f5f9" stroke-linecap="round" stroke-width="16"></path>
+<!-- Active Arc for 42ms (~8.4% of 500ms) -->
+<path d="M 20 105 A 80 80 0 0 1 180 105" fill="none" stroke="url(#latencyGradientFresh)" stroke-dasharray="251.3" stroke-dashoffset="196" stroke-linecap="round" stroke-width="16"></path>
+<!-- Scale Markers -->
+<text class="text-[10px] font-mono fill-slate-400 font-semibold" x="18" y="125">0 ms</text>
+<text class="text-[10px] font-mono fill-slate-400 font-semibold" text-anchor="end" x="182" y="125">500 ms</text>
+</svg>
+<!-- Centered Latency Readout -->
+<div class="absolute bottom-1 text-center">
+<span class="text-4xl font-extrabold font-mono text-slate-900 tracking-tight">42<span class="text-xl font-bold text-emerald-600">ms</span></span>
+<p class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Last Inference Time</p>
+</div>
+</div>
+<!-- Latency Percentiles Breakdown -->
+<div class="grid grid-cols-3 gap-2 mt-4">
+<div class="bg-slate-50/80 border border-slate-100 rounded-xl p-2.5 text-center">
+<span class="text-[10px] text-slate-400 font-medium block">P50 (Median)</span>
+<span class="text-sm font-bold font-mono text-slate-800">28 ms</span>
+</div>
+<div class="bg-emerald-50 border border-emerald-200/80 rounded-xl p-2.5 text-center">
+<span class="text-[10px] text-emerald-700 font-semibold block">P95</span>
+<span class="text-sm font-bold font-mono text-emerald-900">42 ms</span>
+</div>
+<div class="bg-slate-50/80 border border-slate-100 rounded-xl p-2.5 text-center">
+<span class="text-[10px] text-slate-400 font-medium block">P99 (SLA)</span>
+<span class="text-sm font-bold font-mono text-slate-800">73 ms</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-mono">
+<span>Batch Queue: <strong class="text-slate-700">0 pending</strong></span>
+<span class="text-emerald-700 font-semibold">Ready for Realtime</span>
+</div>
+</section>
+<!-- Card 3: Model Pipeline Breakdown (lg:col-span-4) -->
+<section class="lg:col-span-4 bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-[0_12px_32px_rgba(16,185,129,0.12)] hover:border-emerald-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between" data-purpose="pipeline-breakdown">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center space-x-2">
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="font-bold text-slate-900 text-base">Model Pipeline Breakdown</h2>
+</div>
+<span class="text-[11px] font-mono text-slate-400 font-medium">5 Stages</span>
+</div>
+<!-- Execution Steps List -->
+<ol class="space-y-2.5 font-mono text-xs">
+<!-- Step 1 -->
+<li class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-emerald-200 transition">
+<div class="flex items-center space-x-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">1</span>
+<span class="font-sans font-medium text-slate-700">Image Preprocessing</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-slate-600 font-semibold">8 ms</span>
+<svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+</li>
+<!-- Step 2 -->
+<li class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-emerald-200 transition">
+<div class="flex items-center space-x-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">2</span>
+<span class="font-sans font-medium text-slate-700">Quantum Feature Encoding</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-slate-600 font-semibold">12 ms</span>
+<svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+</li>
+<!-- Step 3 -->
+<li class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200 hover:border-emerald-300 transition">
+<div class="flex items-center space-x-2.5">
+<span class="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center">3</span>
+<span class="font-sans font-semibold text-emerald-950">VQC Inference (PennyLane)</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-emerald-800 font-bold">15 ms</span>
+<svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+</li>
+<!-- Step 4 -->
+<li class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-emerald-200 transition">
+<div class="flex items-center space-x-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">4</span>
+<span class="font-sans font-medium text-slate-700">U-Net Classification</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-slate-600 font-semibold">5 ms</span>
+<svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+</li>
+<!-- Step 5 -->
+<li class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 hover:border-emerald-200 transition">
+<div class="flex items-center space-x-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">5</span>
+<span class="font-sans font-medium text-slate-700">Post-processing &amp; XAI</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-slate-600 font-semibold">2 ms</span>
+<svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+</li>
+</ol>
+</div>
+<!-- Total Inference Summary Banner -->
+<div class="mt-4 pt-3 border-t border-slate-100">
+<div class="bg-emerald-50 border border-emerald-200/90 rounded-xl px-4 py-3 flex items-center justify-between">
+<span class="text-xs font-bold text-emerald-950 font-sans">Total Pipeline Latency</span>
+<span class="text-lg font-black font-mono text-emerald-700">42 ms</span>
+</div>
+</div>
+</section>
+</div>
+<!-- END: MainTelemetryGrid -->
+</main>
+<!-- END: ContentArea -->
+<!-- BEGIN: PersistentTelemetryFooter -->
+<footer class="mt-auto sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-2.5 px-6 shadow-lg shadow-slate-200/50">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+<!-- Left Architecture Flag -->
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="font-mono text-slate-700 font-medium">Model: Hybrid PyTorch-PennyLane (4-Qubit VQC + U-Net)</span>
+</div>
+<!-- Center Quick Navigation Tabs -->
+<nav class="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+<button class="px-3.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition font-medium">Dashboard</button>
+<button class="px-3.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition font-medium">Workspace</button>
+<button class="px-3.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition font-medium">Archive</button>
+<button class="px-3.5 py-1 rounded-lg bg-emerald-100/80 text-emerald-800 font-bold shadow-xs">Diagnostics</button>
+</nav>
+<!-- Right Benchmark & Timestamp Summary -->
+<div class="flex items-center space-x-3">
+<span class="font-mono text-slate-700 font-semibold">Acc: 95.32% | ROC-AUC: 0.977</span>
+<span class="text-slate-300">|</span>
+<span class="text-[11px] font-mono text-slate-400">© 2026 QUANTUM-DR CLINICAL CORE</span>
+</div>
+</div>
+</footer>
+<!-- END: PersistentTelemetryFooter -->
+</body></html>
