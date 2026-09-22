@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { 
   Cpu, 
   Activity, 
@@ -10,11 +10,10 @@ import {
   Server, 
   Binary, 
   TrendingUp, 
-  Sparkles,
-  ChevronRight,
-  Info
+  Sparkles, 
+  ChevronRight, 
+  Info 
 } from 'lucide-react';
-import diagnosticBg from '../assets/image_e7bea0.jpg';
 
 export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
   const qubitStates = activeResult?.quantum_telemetry?.qubit_states || [
@@ -39,40 +38,8 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
     { name: "Gemini Clinical Reasoning", latency: "1,140 ms", engine: "Gemini Multimodal API", status: "Nominal" },
   ];
 
-  // Ensure body receives background properties to fit perfectly at any zoom level without distortion
-  useEffect(() => {
-    const originalBodyBg = document.body.style.backgroundImage;
-    const originalBodySize = document.body.style.backgroundSize;
-    const originalBodyPos = document.body.style.backgroundPosition;
-    const originalBodyRepeat = document.body.style.backgroundRepeat;
-    const originalBodyAttachment = document.body.style.backgroundAttachment;
-
-    document.body.style.backgroundImage = `url(${diagnosticBg}), url('/image_e7bea0.jpg')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
-
-    return () => {
-      document.body.style.backgroundImage = originalBodyBg;
-      document.body.style.backgroundSize = originalBodySize;
-      document.body.style.backgroundPosition = originalBodyPos;
-      document.body.style.backgroundRepeat = originalBodyRepeat;
-      document.body.style.backgroundAttachment = originalBodyAttachment;
-    };
-  }, []);
-
   return (
-    <div 
-      className="space-y-6 animate-fadeIn pb-12 system-diagnostics-wrapper"
-      style={{
-        backgroundImage: `url(${diagnosticBg}), url('/image_e7bea0.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-      }}
-    >
+    <div className="space-y-6 animate-fadeIn pb-12 bg-transparent">
       
       {/* 1. Page Header with Judge Telemetry Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-teal-100/80 dark:border-slate-800">

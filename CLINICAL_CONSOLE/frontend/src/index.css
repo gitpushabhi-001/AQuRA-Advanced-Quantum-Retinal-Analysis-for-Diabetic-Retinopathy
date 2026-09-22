@@ -44,9 +44,7 @@
 
 /* Global Background with Dimming Overlay */
 .clinical-overview-wrapper,
-.diagnostic-screening-wrapper,
-.system-diagnostics-wrapper,
-.patient-archive-wrapper {
+.diagnostic-screening-wrapper {
   background-image: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.4)), url('/image_e7bea0.jpg');
   background-size: cover;
   background-position: center center;
@@ -55,11 +53,14 @@
   transition: background-image 0.3s ease;
 }
 
+.system-diagnostics-wrapper,
+.patient-archive-wrapper {
+  background: transparent !important;
+}
+
 /* Dark Mode Background with Deep Obsidian/Slate Overlay */
 html.dark .clinical-overview-wrapper,
 html.dark .diagnostic-screening-wrapper,
-html.dark .system-diagnostics-wrapper,
-html.dark .patient-archive-wrapper,
 html.dark body {
   background-image: linear-gradient(rgba(10, 15, 29, 0.88), rgba(10, 15, 29, 0.92)), url('/image_e7bea0.jpg') !important;
   background-size: cover;

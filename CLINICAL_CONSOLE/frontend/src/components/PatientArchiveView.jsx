@@ -10,7 +10,6 @@ import {
   Database,
   RefreshCw
 } from 'lucide-react';
-import archiveBg from '../assets/image_e7bea0.jpg';
 
 export const PatientArchiveView = ({
   historyList = [],
@@ -20,29 +19,6 @@ export const PatientArchiveView = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [highRiskOnly, setHighRiskOnly] = useState(false);
-
-  // Ensure body receives background properties to fit perfectly at any zoom level without distortion
-  useEffect(() => {
-    const originalBodyBg = document.body.style.backgroundImage;
-    const originalBodySize = document.body.style.backgroundSize;
-    const originalBodyPos = document.body.style.backgroundPosition;
-    const originalBodyRepeat = document.body.style.backgroundRepeat;
-    const originalBodyAttachment = document.body.style.backgroundAttachment;
-
-    document.body.style.backgroundImage = `url(${archiveBg}), url('/image_e7bea0.jpg')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundAttachment = 'fixed';
-
-    return () => {
-      document.body.style.backgroundImage = originalBodyBg;
-      document.body.style.backgroundSize = originalBodySize;
-      document.body.style.backgroundPosition = originalBodyPos;
-      document.body.style.backgroundRepeat = originalBodyRepeat;
-      document.body.style.backgroundAttachment = originalBodyAttachment;
-    };
-  }, []);
 
   // Keyboard shortcut Ctrl+K to focus search input
   useEffect(() => {
@@ -83,16 +59,7 @@ export const PatientArchiveView = ({
   };
 
   return (
-    <div 
-      className="space-y-6 animate-fadeIn pb-12 patient-archive-wrapper"
-      style={{
-        backgroundImage: `url(${archiveBg}), url('/image_e7bea0.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed',
-      }}
-    >
+    <div className="space-y-6 animate-fadeIn pb-12 bg-transparent">
       
       {/* 1. Header with HIPAA Compliance Badge & Clinical Subtitle */}
       <section 
@@ -204,16 +171,11 @@ export const PatientArchiveView = ({
 
       {/* 3. Longitudinal EHR Data Table */}
       <section 
-        className="border border-teal-100/90 dark:border-slate-800 rounded-2xl shadow-surgical overflow-hidden glass-card-clinical"
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-        }}
+        className="rounded-2xl overflow-hidden bg-white/75 dark:bg-slate-900/75 backdrop-blur-md shadow-lg border border-white/30 dark:border-slate-800/60 transition-colors duration-300"
       >
         
         {filteredList.length === 0 ? (
-          <div className="p-12 text-center space-y-3">
+          <div className="p-12 text-center space-y-3 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xs">
             <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 dark:text-slate-500">
               <Database className="w-6 h-6" />
             </div>
@@ -226,7 +188,7 @@ export const PatientArchiveView = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 font-mono text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <tr className="border-b border-slate-200/50 dark:border-slate-800/60 bg-white/40 dark:bg-slate-800/40 font-mono text-[11px] uppercase tracking-wider text-slate-600 dark:text-slate-300 backdrop-blur-xs">
                   <th className="py-3 px-4 font-semibold">Scan ID</th>
                   <th className="py-3 px-4 font-semibold">Patient File</th>
                   <th className="py-3 px-4 font-semibold">Timestamp</th>
@@ -235,7 +197,7 @@ export const PatientArchiveView = ({
                   <th className="py-3 px-4 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs text-slate-700 dark:text-slate-300">
+              <tbody className="divide-y divide-slate-100/60 dark:divide-slate-800/60 text-xs text-slate-700 dark:text-slate-300">
                 {filteredList.map((item) => {
                   const isHighRisk = item.severity_grade >= 2;
                   const formattedDate = item.created_at 
