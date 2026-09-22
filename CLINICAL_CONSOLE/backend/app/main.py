@@ -1,6 +1,11 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
+# Securely initialize and load environment variables at runtime
+load_dotenv()
 
 from backend.app.config import settings
 from backend.app.database import init_db
@@ -12,6 +17,7 @@ from backend.app.models.hybrid_quantum import TORCH_AVAILABLE, PENNYLANE_AVAILAB
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
+    debug=settings.DEBUG,
     description="Full-Stack Medical Image Analysis API powered by Hybrid Quantum PyTorch (CNN U-Net + PennyLane)"
 )
 
@@ -28,7 +34,7 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     init_db()
-    print(f"[{settings.PROJECT_NAME}] Database initialized successfully.")
+    print(f"[{settings.PROJECT_NAME}] Database initialized successfully. Debug mode: {settings.DEBUG}")
 
 # Include Routers
 app.include_router(predict_router)
@@ -40,8 +46,10 @@ def root():
         "status": "online",
         "project": settings.PROJECT_NAME,
         "version": settings.VERSION,
+        "debug": settings.DEBUG,
         "simulation_mode": settings.IS_SIMULATION_MODE,
-        "weights_present": settings.WEIGHTS_PATH.exists(),
+        "weights_present": settings.MODEL_PATH.is_file(),
+        "model_file": settings.MODEL_PATH.name,
         "docs_url": "/docs"
     }
 
@@ -49,11 +57,13 @@ def root():
 def health_check():
     return {
         "status": "healthy",
+        "debug": settings.DEBUG,
         "pytorch_available": TORCH_AVAILABLE,
         "pennylane_available": PENNYLANE_AVAILABLE,
         "model_loaded": model_service.is_loaded,
         "is_simulation_mode": settings.IS_SIMULATION_MODE,
-        "weights_path": str(settings.WEIGHTS_PATH),
+        "weights_path": str(settings.MODEL_PATH),
+        "weights_present": settings.MODEL_PATH.is_file(),
         "database": "sqlite/postgresql",
         "n_qubits": settings.N_QUBITS,
         "q_depth": settings.Q_DEPTH

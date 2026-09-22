@@ -30,11 +30,42 @@ class ModelService:
     and High-Fidelity Simulation Mode depending on weights file presence.
     """
 
+    @staticmethod
+    def resolve_model_path() -> Path:
+        """
+        Dynamically resolves the path to models/QUANTUM_MODEL.pth using pathlib,
+        ensuring robust cross-platform execution without path errors regardless of
+        the current working directory.
+        """
+        # 1. Use settings.MODEL_PATH if available
+        if hasattr(settings, "MODEL_PATH"):
+            resolved = Path(settings.MODEL_PATH).resolve()
+            if resolved.is_file():
+                return resolved
+
+        # 2. Dynamic relative lookup from backend root
+        backend_root = Path(__file__).resolve().parent.parent.parent
+        primary_candidate = (backend_root / "models" / "QUANTUM_MODEL.pth").resolve()
+        if primary_candidate.is_file():
+            return primary_candidate
+
+        # 3. Check relative to current working directory
+        cwd = Path.cwd().resolve()
+        for candidate in [
+            cwd / "backend" / "models" / "QUANTUM_MODEL.pth",
+            cwd / "models" / "QUANTUM_MODEL.pth",
+            backend_root / "app" / "ml" / "weights" / "quantum_dr_model.pth"
+        ]:
+            if candidate.is_file():
+                return candidate.resolve()
+
+        return primary_candidate
+
     def __init__(self):
         self.model = None
         self.device = None
         self.is_loaded = False
-        self.weights_path = settings.WEIGHTS_PATH
+        self.weights_path = self.resolve_model_path()
         self.transform = None
 
         if TORCH_AVAILABLE:
@@ -49,25 +80,28 @@ class ModelService:
             ])
             self.try_load_weights()
         else:
-            print("[ModelService] PyTorch not available in current environment. Running in SIMULATION MODE.")
+            print(f"[ModelService] PyTorch not available in current environment. Detected weights at: {self.weights_path}. Running in SIMULATION MODE.")
 
     def try_load_weights(self) -> bool:
         """
         ========================================================================
-        USER MODEL WEIGHTS INJECTION HOOK:
-        Checks for 'quantum_dr_model.pth' and initializes the HybridModel.
+        QUANTUM MODEL WEIGHTS INJECTION HOOK:
+        Dynamically resolves 'models/QUANTUM_MODEL.pth' and initializes HybridModel.
         ========================================================================
         """
         if not TORCH_AVAILABLE:
             return False
 
-        if not self.weights_path.exists():
-            print(f"[ModelService] Weights file not found at: {self.weights_path}")
-            print("[ModelService] Running in SIMULATION MODE. Place 'quantum_dr_model.pth' to activate live model.")
+        # Refresh dynamic path resolution
+        self.weights_path = self.resolve_model_path()
+
+        if not self.weights_path.is_file():
+            print(f"[ModelService] Model file not found at: {self.weights_path}")
+            print("[ModelService] Running in SIMULATION MODE. Place 'QUANTUM_MODEL.pth' inside 'backend/models/' to activate live model.")
             return False
 
         try:
-            print(f"[ModelService] Loading trained PyTorch weights from: {self.weights_path}")
+            print(f"[ModelService] Loading trained PyTorch quantum weights from: {self.weights_path}")
             
             # Instantiate architecture
             self.model = HybridModel().to(self.device)
@@ -76,7 +110,7 @@ class ModelService:
             
             # ==================================================================
             # USER INJECTION HOOK:
-            # torch.load('quantum_dr_model.pth')
+            # torch.load('models/QUANTUM_MODEL.pth')
             # ==================================================================
             checkpoint = torch.load(
                 str(self.weights_path),
@@ -93,7 +127,7 @@ class ModelService:
 
             self.model.eval()
             self.is_loaded = True
-            print("[ModelService] Successfully loaded trained Quantum DR Model! Live inference ACTIVE.")
+            print(f"[ModelService] Successfully loaded trained Quantum DR Model from {self.weights_path.name}! Live inference ACTIVE.")
             return True
         except Exception as e:
             print(f"[ModelService] Error loading model weights: {e}")
