@@ -1,6 +1,15 @@
 # AQuRA-Advanced-Quantum-Retinal-Analysis-for-Diabetic-Retinopathy
 "AQuRA is a hybrid Quantum Machine Learning (QML) framework for high-precision, early detection of Diabetic Retinopathy. By leveraging quantum feature mapping and entanglement, it captures complex spatial patterns in retinal images that classical CNNs often miss.
 
+## **TEAM PHANTOM HUNTERS**
+
+| Name | Role | Profile |
+| :--- | :--- | :--- |
+| **Abhirup Mondal** | **Lead AI/ML Engineer**<br>Hybrid Quantum Model Architecture, Mixed Precision Training & ML Backend Pipeline | [LinkedIn](https://www.linkedin.com/in/abhirupmondal78/) |
+| **Sudhanshu Mishra** | **Quantum ML Researcher**<br>Classical-to-Quantum Feature Extraction, Variational Circuits & Optimization | [LinkedIn](https://www.linkedin.com/in/shudhanshu-mishra-344289323/) |
+| **Riddhi Jain** | **Product & Strategy Lead**<br>Business Strategy, Core Presentation & Pitch Deck Creation | N/A |
+| **Nidish Kumar Das** | **Frontend Engineer & UI/UX**<br>Clinical Console Web Interface, Data Visualizations & Pitch Deck Collaboration | [LinkedIn](https://www.linkedin.com/in/nidhish-das-5755b7382/) |
+
 
 ### 🚀 Project Overview
 
