@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Upload, 
   FolderOpen, 
@@ -11,12 +11,13 @@ import {
   Activity, 
   FileText, 
   Download, 
-  RefreshCw,
-  ChevronRight,
-  Layers,
-  Eye
+  RefreshCw, 
+  ChevronRight, 
+  Layers, 
+  Eye 
 } from 'lucide-react';
 import { SAMPLE_CASES } from '../data/sampleCases';
+import diagnosticBg from '../assets/image_f6ca80.jpg';
 
 export const WorkspaceView = ({
   isAnalyzing,
@@ -60,8 +61,38 @@ export const WorkspaceView = ({
     { num: 5, title: "Generating Clinical Report", desc: "Multimodal Gemini AI decision synthesis" },
   ];
 
+  // Ensure body receives background properties to fit perfectly at any zoom level without distortion
+  useEffect(() => {
+    const originalBodyBg = document.body.style.backgroundImage;
+    const originalBodySize = document.body.style.backgroundSize;
+    const originalBodyPos = document.body.style.backgroundPosition;
+    const originalBodyRepeat = document.body.style.backgroundRepeat;
+    const originalBodyAttachment = document.body.style.backgroundAttachment;
+
+    document.body.style.backgroundImage = `url(${diagnosticBg}), url('/image_f6ca80.jpg')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
+
+    return () => {
+      document.body.style.backgroundImage = originalBodyBg;
+      document.body.style.backgroundSize = originalBodySize;
+      document.body.style.backgroundPosition = originalBodyPos;
+      document.body.style.backgroundRepeat = originalBodyRepeat;
+      document.body.style.backgroundAttachment = originalBodyAttachment;
+    };
+  }, []);
+
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div 
+      className="space-y-6 animate-fadeIn pb-12 diagnostic-screening-wrapper"
+      style={{
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       
       {/* 1. Page Breadcrumbs & Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-teal-100/80">
@@ -110,14 +141,21 @@ export const WorkspaceView = ({
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Upload Module Card (col-span-7) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-teal-100 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation">
+        <div 
+          className="lg:col-span-7 rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Upload className="w-5 h-5 text-teal-700" />
                 <h2 className="text-base font-bold text-slate-900 tracking-tight">Image Ingestion</h2>
               </div>
-              <span className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 border border-slate-200">
+              <span className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200">
                 DICOM / RGB
               </span>
             </div>
@@ -127,7 +165,7 @@ export const WorkspaceView = ({
               {/* Drop Zone */}
               <div 
                 onClick={() => document.getElementById('fundus-file-input')?.click()}
-                className="md:col-span-7 bg-teal-50/40 border-2 border-dashed border-teal-200/90 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-teal-50/80 hover:border-teal-400 transition-all cursor-pointer group"
+                className="md:col-span-7 bg-teal-50/50 backdrop-blur-xs border-2 border-dashed border-teal-200/90 rounded-xl p-6 flex flex-col items-center justify-center text-center hover:bg-teal-50/80 hover:border-teal-400 transition-all cursor-pointer group"
               >
                 <input 
                   id="fundus-file-input"
@@ -170,7 +208,7 @@ export const WorkspaceView = ({
                   type="button"
                   onClick={() => handleSampleClick(SAMPLE_CASES[0])}
                   disabled={isAnalyzing}
-                  className="w-full bg-slate-50 hover:bg-teal-50/70 border border-slate-200/80 hover:border-teal-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation"
+                  className="w-full bg-slate-50/90 hover:bg-teal-50/80 border border-slate-200/80 hover:border-teal-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs"
                 >
                   <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200">
                     <img 
@@ -190,7 +228,7 @@ export const WorkspaceView = ({
                   type="button"
                   onClick={() => handleSampleClick(SAMPLE_CASES[1] || SAMPLE_CASES[0])}
                   disabled={isAnalyzing}
-                  className="w-full bg-slate-50 hover:bg-rose-50/70 border border-slate-200/80 hover:border-rose-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation"
+                  className="w-full bg-slate-50/90 hover:bg-rose-50/80 border border-slate-200/80 hover:border-rose-300 p-2 rounded-xl flex items-center gap-2.5 text-left group focus:outline-none cursor-pointer floating-elevation backdrop-blur-xs"
                 >
                   <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 shadow-xs border border-slate-200">
                     <img 
@@ -216,7 +254,14 @@ export const WorkspaceView = ({
         </div>
 
         {/* Processing State Card (col-span-5) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-teal-100 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation">
+        <div 
+          className="lg:col-span-5 rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -290,7 +335,14 @@ export const WorkspaceView = ({
 
       {/* 3. Middle Grid: Dual-Viewer Interface */}
       {(imagePreview || activeResult) && (
-        <section className="bg-white rounded-2xl border border-teal-100 p-5 sm:p-6 shadow-surgical space-y-4 floating-elevation">
+        <section 
+          className="rounded-2xl border border-teal-100/90 p-5 sm:p-6 shadow-surgical space-y-4 floating-elevation glass-card-clinical"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
               <div className="flex items-center gap-2">
@@ -420,7 +472,14 @@ export const WorkspaceView = ({
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* Prediction Result Card (col-span-5) */}
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-teal-100 p-6 shadow-surgical flex flex-col justify-between floating-elevation">
+          <div 
+            className="lg:col-span-5 rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+            }}
+          >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -504,7 +563,14 @@ export const WorkspaceView = ({
           </div>
 
           {/* Gemini Multimodal Clinical Report (col-span-7) */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-teal-100 p-6 shadow-surgical flex flex-col justify-between floating-elevation">
+          <div 
+            className="lg:col-span-7 rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+            }}
+          >
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">

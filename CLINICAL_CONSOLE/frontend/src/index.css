@@ -42,8 +42,9 @@
   will-change: transform, box-shadow;
 }
 
-/* Clinical Overview Background Specification */
-.clinical-overview-wrapper {
+/* Clinical Overview & Diagnostic Screening Background Specification */
+.clinical-overview-wrapper,
+.diagnostic-screening-wrapper {
   background-image: url('/image_f6ca80.jpg');
   background-size: cover;
   background-position: center center;

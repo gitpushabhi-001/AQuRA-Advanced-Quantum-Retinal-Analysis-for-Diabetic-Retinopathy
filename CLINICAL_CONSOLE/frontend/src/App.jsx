@@ -128,8 +128,10 @@ export function App() {
 
   return (
     <div 
-      className={`min-h-screen ${activeView === 'overview' ? 'clinical-overview-wrapper' : 'bg-[#f8fafc]'} text-slate-800 antialiased flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900 relative`}
-      style={activeView === 'overview' ? {
+      className={`min-h-screen ${
+        (activeView === 'overview' || activeView === 'workspace') ? 'clinical-overview-wrapper' : 'bg-[#f8fafc]'
+      } text-slate-800 antialiased flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900 relative`}
+      style={(activeView === 'overview' || activeView === 'workspace') ? {
         backgroundImage: "url('/image_f6ca80.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center center",
@@ -139,7 +141,7 @@ export function App() {
     >
       
       {/* Ambient background glow layers matching Stitch specification */}
-      {activeView !== 'overview' && (
+      {activeView !== 'overview' && activeView !== 'workspace' && (
         <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
           <div className="absolute -top-32 -left-32 w-[680px] h-[680px] bg-teal-200/25 rounded-full blur-3xl ambient-glow" />
           <div className="absolute top-1/4 right-0 w-[580px] h-[580px] bg-emerald-200/20 rounded-full blur-3xl ambient-glow" style={{ animationDelay: '3s' }} />
