@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   Cpu, 
   Activity, 
@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Info
 } from 'lucide-react';
+import diagnosticBg from '../assets/image_e7bea0.jpg';
 
 export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
   const qubitStates = activeResult?.quantum_telemetry?.qubit_states || [
@@ -38,8 +39,40 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
     { name: "Gemini Clinical Reasoning", latency: "1,140 ms", engine: "Gemini Multimodal API", status: "Nominal" },
   ];
 
+  // Ensure body receives background properties to fit perfectly at any zoom level without distortion
+  useEffect(() => {
+    const originalBodyBg = document.body.style.backgroundImage;
+    const originalBodySize = document.body.style.backgroundSize;
+    const originalBodyPos = document.body.style.backgroundPosition;
+    const originalBodyRepeat = document.body.style.backgroundRepeat;
+    const originalBodyAttachment = document.body.style.backgroundAttachment;
+
+    document.body.style.backgroundImage = `url(${diagnosticBg}), url('/image_e7bea0.jpg')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
+
+    return () => {
+      document.body.style.backgroundImage = originalBodyBg;
+      document.body.style.backgroundSize = originalBodySize;
+      document.body.style.backgroundPosition = originalBodyPos;
+      document.body.style.backgroundRepeat = originalBodyRepeat;
+      document.body.style.backgroundAttachment = originalBodyAttachment;
+    };
+  }, []);
+
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div 
+      className="space-y-6 animate-fadeIn pb-12 system-diagnostics-wrapper"
+      style={{
+        backgroundImage: `url(${diagnosticBg}), url('/image_e7bea0.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       
       {/* 1. Page Header with Judge Telemetry Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-teal-100/80">
@@ -57,7 +90,7 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white border border-teal-200 text-teal-800 text-xs font-semibold shadow-xs">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/90 border border-teal-200/90 text-teal-800 text-xs font-semibold shadow-xs backdrop-blur-xs">
           <Zap className="w-4 h-4 text-teal-600 animate-pulse" />
           <span className="font-mono">Live Hardware Telemetry</span>
           <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -68,11 +101,18 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Card 1: PennyLane Quantum Module */}
-        <div className="bg-white rounded-2xl border border-teal-100 p-6 shadow-surgical flex flex-col justify-between hover:shadow-surgical-lg transition-all duration-300">
+        <div 
+          className="rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 shadow-xs">
+                <div className="w-11 h-11 rounded-xl bg-teal-50/90 border border-teal-200 flex items-center justify-center text-teal-700 shadow-xs">
                   <Cpu className="w-6 h-6" />
                 </div>
                 <div>
@@ -88,14 +128,14 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
                 </div>
               </div>
 
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50/90 border border-emerald-200 px-2.5 py-1 rounded-full">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>QNode Active</span>
               </span>
             </div>
 
             {/* Spec Banner */}
-            <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl font-mono text-xs text-slate-700 mb-5">
+            <div className="bg-slate-50/90 border border-slate-100 p-3 rounded-xl font-mono text-xs text-slate-700 mb-5 backdrop-blur-xs">
               Parameterized Variational Quantum Circuit (VQC) • <span className="text-teal-700 font-bold">Ring CNOT Entanglement</span>
             </div>
 
@@ -106,7 +146,7 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {qubitStates.map((q) => (
-                  <div key={q.qubit_index} className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl text-center">
+                  <div key={q.qubit_index} className="bg-slate-50/90 border border-slate-200/80 p-3 rounded-xl text-center backdrop-blur-xs">
                     <span className="block font-mono text-[11px] font-bold text-teal-800">
                       Qubit |q_{q.qubit_index}⟩
                     </span>
@@ -129,11 +169,18 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
         </div>
 
         {/* Card 2: PyTorch Classical Vision Backbone */}
-        <div className="bg-white rounded-2xl border border-teal-100 p-6 shadow-surgical flex flex-col justify-between hover:shadow-surgical-lg transition-all duration-300">
+        <div 
+          className="rounded-2xl border border-teal-100/90 p-6 shadow-surgical flex flex-col justify-between floating-elevation glass-card-clinical"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 shadow-xs">
+                <div className="w-11 h-11 rounded-xl bg-indigo-50/90 border border-indigo-200 flex items-center justify-center text-indigo-700 shadow-xs">
                   <Layers className="w-6 h-6" />
                 </div>
                 <div>
@@ -149,21 +196,21 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
                 </div>
               </div>
 
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50/90 border border-emerald-200 px-2.5 py-1 rounded-full">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Torch CUDA/CPU</span>
               </span>
             </div>
 
             {/* Spec Banner */}
-            <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl font-mono text-xs text-slate-700 mb-5">
+            <div className="bg-slate-50/90 border border-slate-100 p-3 rounded-xl font-mono text-xs text-slate-700 mb-5 backdrop-blur-xs">
               Hierarchical Residual Feature Maps • <span className="text-indigo-700 font-bold">16-D Bottleneck Projection</span>
             </div>
 
             {/* Telemetry Matrix Grid */}
             <div className="grid grid-cols-2 gap-3 mb-4">
               {telemetryMetrics.map((m, i) => (
-                <div key={i} className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl">
+                <div key={i} className="bg-slate-50/90 border border-slate-200/80 p-3 rounded-xl backdrop-blur-xs">
                   <span className="block text-[11px] text-slate-500 font-sans font-medium">{m.label}</span>
                   <span className="block font-mono text-lg font-bold text-slate-900 my-0.5">{m.value}</span>
                   <span className="block font-mono text-[10px] text-slate-400">{m.note}</span>
@@ -181,7 +228,14 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
       </section>
 
       {/* 3. Pipeline Telemetry Breakdown */}
-      <section className="bg-white rounded-2xl border border-teal-100 p-6 shadow-surgical space-y-4 hover:shadow-surgical-lg transition-all duration-300">
+      <section 
+        className="rounded-2xl border border-teal-100/90 p-6 shadow-surgical space-y-4 floating-elevation glass-card-clinical"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <Activity className="w-5 h-5 text-teal-700" />
@@ -195,7 +249,7 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/80 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+              <tr className="border-b border-slate-200/80 bg-slate-50/90 backdrop-blur-xs font-mono text-[11px] uppercase tracking-wider text-slate-600">
                 <th className="py-2.5 px-4 font-semibold">Stage</th>
                 <th className="py-2.5 px-4 font-semibold">Execution Latency</th>
                 <th className="py-2.5 px-4 font-semibold">Computing Engine</th>
@@ -204,7 +258,7 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700 font-mono">
               {pipelineStages.map((stg, i) => (
-                <tr key={i} className="hover:bg-teal-50/30 transition-colors">
+                <tr key={i} className="hover:bg-teal-50/40 transition-colors">
                   <td className="py-3 px-4 font-bold text-slate-900 font-sans">{stg.name}</td>
                   <td className="py-3 px-4 text-teal-800 font-bold">{stg.latency}</td>
                   <td className="py-3 px-4 text-slate-500">{stg.engine}</td>
@@ -222,7 +276,14 @@ export const SystemDiagnosticsView = ({ backendStatus, activeResult }) => {
       </section>
 
       {/* 4. Hackathon Judges Architecture Note */}
-      <section className="bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 border border-teal-200 rounded-2xl p-6 shadow-xs">
+      <section 
+        className="border border-teal-200/90 rounded-2xl p-6 shadow-xs glass-card-clinical"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-xl bg-teal-700 text-white flex items-center justify-center shrink-0 shadow-xs">
             <Info className="w-5 h-5" />

@@ -10,6 +10,7 @@ import {
   Database,
   RefreshCw
 } from 'lucide-react';
+import archiveBg from '../assets/image_e7bea0.jpg';
 
 export const PatientArchiveView = ({
   historyList = [],
@@ -19,6 +20,29 @@ export const PatientArchiveView = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [highRiskOnly, setHighRiskOnly] = useState(false);
+
+  // Ensure body receives background properties to fit perfectly at any zoom level without distortion
+  useEffect(() => {
+    const originalBodyBg = document.body.style.backgroundImage;
+    const originalBodySize = document.body.style.backgroundSize;
+    const originalBodyPos = document.body.style.backgroundPosition;
+    const originalBodyRepeat = document.body.style.backgroundRepeat;
+    const originalBodyAttachment = document.body.style.backgroundAttachment;
+
+    document.body.style.backgroundImage = `url(${archiveBg}), url('/image_e7bea0.jpg')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
+
+    return () => {
+      document.body.style.backgroundImage = originalBodyBg;
+      document.body.style.backgroundSize = originalBodySize;
+      document.body.style.backgroundPosition = originalBodyPos;
+      document.body.style.backgroundRepeat = originalBodyRepeat;
+      document.body.style.backgroundAttachment = originalBodyAttachment;
+    };
+  }, []);
 
   // Keyboard shortcut Ctrl+K to focus search input
   useEffect(() => {
@@ -59,10 +83,26 @@ export const PatientArchiveView = ({
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div 
+      className="space-y-6 animate-fadeIn pb-12 patient-archive-wrapper"
+      style={{
+        backgroundImage: `url(${archiveBg}), url('/image_e7bea0.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       
       {/* 1. Header with HIPAA Compliance Badge & Clinical Subtitle */}
-      <section className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 overflow-hidden rounded-2xl bg-white border border-teal-100 p-6 shadow-surgical">
+      <section 
+        className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 overflow-hidden rounded-2xl border border-teal-100/90 p-6 shadow-surgical glass-card-clinical"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
         <div className="relative z-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-teal-700 font-mono">
             PATIENT MANAGEMENT & RECORDS
@@ -76,7 +116,7 @@ export const PatientArchiveView = ({
         </div>
 
         {/* HIPAA Compliance Badge */}
-        <div className="relative z-10 rounded-xl bg-teal-50/70 border border-teal-200/80 px-4 py-3 flex items-center gap-3.5 max-w-md">
+        <div className="relative z-10 rounded-xl bg-teal-50/80 border border-teal-200/80 px-4 py-3 flex items-center gap-3.5 max-w-md backdrop-blur-xs">
           <div className="w-9 h-9 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <ShieldCheck className="w-5 h-5" />
           </div>
@@ -90,7 +130,14 @@ export const PatientArchiveView = ({
       </section>
 
       {/* 2. Filter & Search Action Bar */}
-      <section className="bg-white border border-teal-100 rounded-2xl p-4 shadow-surgical flex flex-col md:flex-row items-center justify-between gap-3">
+      <section 
+        className="border border-teal-100/90 rounded-2xl p-4 shadow-surgical flex flex-col md:flex-row items-center justify-between gap-3 glass-card-clinical"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
         
         {/* Left: Search Bar & High Risk Filter */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto flex-1">
@@ -106,7 +153,7 @@ export const PatientArchiveView = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by Scan ID, Filename, or Condition..."
-              className="w-full pl-10 pr-18 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 transition-all shadow-inner"
+              className="w-full pl-10 pr-18 py-2 bg-slate-50/90 border border-slate-200 rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 transition-all shadow-inner"
             />
             <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
               <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400 bg-white border border-slate-200 rounded shadow-xs">
@@ -122,7 +169,7 @@ export const PatientArchiveView = ({
             className={`w-full sm:w-auto flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap shadow-xs ${
               highRiskOnly
                 ? 'bg-rose-600 text-white border-rose-600'
-                : 'bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100/80'
+                : 'bg-rose-50/90 border-rose-200 text-rose-800 hover:bg-rose-100/90'
             }`}
           >
             <span className={`w-2 h-2 rounded-full ${highRiskOnly ? 'bg-white' : 'bg-rose-500 animate-ping'}`} />
@@ -134,7 +181,7 @@ export const PatientArchiveView = ({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
+              className="p-2 rounded-xl border border-slate-200 bg-white/80 hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               title="Refresh database records"
             >
               <RefreshCw className="w-4 h-4" />
@@ -146,7 +193,7 @@ export const PatientArchiveView = ({
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
           <button
             onClick={handleExportJSON}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/90 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors cursor-pointer floating-elevation"
           >
             <Download className="w-3.5 h-3.5 text-slate-500" />
             <span>Export Records (JSON)</span>
@@ -156,7 +203,14 @@ export const PatientArchiveView = ({
       </section>
 
       {/* 3. Longitudinal EHR Data Table */}
-      <section className="bg-white border border-teal-100 rounded-2xl shadow-surgical overflow-hidden">
+      <section 
+        className="border border-teal-100/90 rounded-2xl shadow-surgical overflow-hidden glass-card-clinical"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
         
         {filteredList.length === 0 ? (
           <div className="p-12 text-center space-y-3">

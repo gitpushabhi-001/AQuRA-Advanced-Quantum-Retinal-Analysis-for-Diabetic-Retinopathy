@@ -42,10 +42,12 @@
   will-change: transform, box-shadow;
 }
 
-/* Clinical Overview & Diagnostic Screening Background Specification */
+/* Clinical Overview, Diagnostic Screening, System Diagnostics & Patient Archive Background */
 .clinical-overview-wrapper,
-.diagnostic-screening-wrapper {
-  background-image: url('/image_f6ca80.jpg');
+.diagnostic-screening-wrapper,
+.system-diagnostics-wrapper,
+.patient-archive-wrapper {
+  background-image: url('/image_e7bea0.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -54,7 +56,7 @@
 
 /* Semi-transparent Glass Cards with Backdrop Blur */
 .glass-card-clinical {
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
