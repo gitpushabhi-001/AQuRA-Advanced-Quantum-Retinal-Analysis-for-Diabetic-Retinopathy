@@ -38,7 +38,7 @@ class XaiService:
         """
         w, h = image.size
         
-       # Decide severity if not overridden
+        # Decide severity if not overridden
         if severity_override is not None:
             grade = severity_override
         # Check for any variation of "Healthy" or "No DR"
@@ -64,12 +64,8 @@ class XaiService:
         if confidence_override is not None:
             confidence = confidence_override
         else:
-            confidence = 0.85  # Default fixed confidence if nothing is provided
-
-            if grade == 0:
-                confidence = round(random.uniform(0.94, 0.985), 4)
-            else:
-                confidence = round(random.uniform(0.89, 0.978), 4)
+            # YAHAN DIKKAT HAI: Agar main.py model run karke asli confidence nahi bhejegi, to ye default 0.85 hi lega!
+            confidence = 0.85 
 
         # Generate realistic bounding boxes corresponding to severity
         boxes = self._generate_lesion_boxes(grade)
