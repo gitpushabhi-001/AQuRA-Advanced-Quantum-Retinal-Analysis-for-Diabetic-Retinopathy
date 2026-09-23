@@ -36,6 +36,9 @@ export const ClinicalOverviewView = ({
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.12] font-sans">
+              <span className="block text-base sm:text-lg font-black uppercase tracking-[0.2em] text-teal-700 dark:text-teal-400 mb-2 font-mono">
+                AQURA
+              </span>
               Next-Generation <br />
               <span className="text-teal-700 dark:text-teal-400">Retinal Analysis</span>
             </h1>
