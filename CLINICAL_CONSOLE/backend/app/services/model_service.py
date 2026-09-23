@@ -170,11 +170,13 @@ class ModelService:
                 
                 return (*out, False)  # is_simulation = False
             except Exception as e:
-                print(f"[ModelService] Live inference error: {e}. Falling back to simulation mode.")
+                print(f"[ModelService] LIVE INFERENCE FAILED WITH ERROR:")
+                import traceback
+                traceback.print_exc()
+                raise e
 
         # Default Simulation Mode
         out = xai_service.generate_xai_output(image)
         return (*out, True)  # is_simulation = True
-
 
 model_service = ModelService()
