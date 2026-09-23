@@ -70,7 +70,13 @@ class Settings(BaseModel):
     # Server Settings
     HOST: str = os.getenv("HOST", "0.0.0.0")
     PORT: int = int(os.getenv("PORT", 8000))
-    CORS_ORIGINS: list[str] = ["*"]
+    CORS_ORIGINS: list[str] = [
+        "https://aquara-advance-retinal-kit.onrender.com",
+        "https://aqura-retinal-kit.onrender.com",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "*"
+    ]
     
     # Quantum Settings
     N_QUBITS: int = 4
