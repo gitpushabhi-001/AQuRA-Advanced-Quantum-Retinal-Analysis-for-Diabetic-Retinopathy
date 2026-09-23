@@ -165,7 +165,7 @@ class ModelService:
             else:
                 return 1
 
-    def generate_gradcam(self, input_tensor: torch.Tensor, target_class: int = 0) -> np.ndarray:
+    def generate_gradcam(self, input_tensor, target_class: int = 0) -> np.ndarray:
         """
         Derives Grad-CAM activation map strictly from the actual 4-qubit quantum model's
         feature maps and backpropagated gradients at the bottleneck convolutional layer.
