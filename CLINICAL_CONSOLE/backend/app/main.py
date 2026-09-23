@@ -1,4 +1,19 @@
 import os
+import sys
+from pathlib import Path
+
+# Ensure root directory (containing 'backend') and backend directory are in sys.path
+# This ensures imports succeed regardless of whether working directory is
+# CLINICAL_CONSOLE or CLINICAL_CONSOLE/backend on Render / Docker / local environments.
+_CURRENT_FILE = Path(__file__).resolve()
+_APP_DIR = _CURRENT_FILE.parent           # .../backend/app
+_BACKEND_DIR = _APP_DIR.parent           # .../backend
+_PARENT_DIR = _BACKEND_DIR.parent         # .../CLINICAL_CONSOLE
+
+for _path in [str(_PARENT_DIR), str(_BACKEND_DIR), str(_APP_DIR)]:
+    if _path not in sys.path:
+        sys.path.insert(0, _path)
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
