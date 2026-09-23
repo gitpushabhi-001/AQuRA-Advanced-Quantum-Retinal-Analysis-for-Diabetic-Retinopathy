@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Get base URL from environment or fallback to live Render backend
-const RAW_API_BASE_URL = import.meta.env.VITE_API_URL || 'https://aqura-retinal-kit.onrender.com';
+const RAW_API_BASE_URL = import.meta.env.VITE_API_URL || 'https://aqura-backend-b5y9.onrender.com';
 
 // Ensure no trailing slashes on base URL to prevent double slashes (e.g., '//predict')
 export const API_BASE_URL = (RAW_API_BASE_URL || '').trim().replace(/\/+$/, '');

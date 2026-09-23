@@ -10,22 +10,22 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/predict': {
-        target: 'https://aqura-retinal-kit.onrender.com',
+        target: 'https://aqura-backend-b5y9.onrender.com',
         changeOrigin: true,
         secure: true,
       },
       '/history': {
-        target: 'https://aqura-retinal-kit.onrender.com',
+        target: 'https://aqura-backend-b5y9.onrender.com',
         changeOrigin: true,
         secure: true,
       },
       '/health': {
-        target: 'https://aqura-retinal-kit.onrender.com',
+        target: 'https://aqura-backend-b5y9.onrender.com',
         changeOrigin: true,
         secure: true,
       },
       '/api': {
-        target: 'https://aqura-retinal-kit.onrender.com',
+        target: 'https://aqura-backend-b5y9.onrender.com',
         changeOrigin: true,
         secure: true,
       }

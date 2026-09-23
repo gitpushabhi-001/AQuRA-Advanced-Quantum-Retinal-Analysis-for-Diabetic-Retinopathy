@@ -40,6 +40,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://aqura-backend-b5y9.onrender.com",
         "https://aquara-advance-retinal-kit.onrender.com",
         "https://aqura-retinal-kit.onrender.com",
         "http://localhost:5173",
