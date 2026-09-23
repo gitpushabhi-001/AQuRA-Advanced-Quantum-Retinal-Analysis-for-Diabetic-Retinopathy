@@ -58,6 +58,51 @@ export const PatientArchiveView = ({
     downloadAnchor.remove();
   };
 
+  // Classification badge helper adhering to modern SaaS pill design
+  const getSeverityBadgeProps = (item) => {
+    const grade = item.severity_grade;
+    const label = (item.predicted_label || '').toLowerCase();
+    const rawName = item.severity_name || '';
+    const lowerName = rawName.toLowerCase();
+
+    const isNoDR = 
+      grade === 0 || 
+      label.includes('no_dr') || 
+      lowerName.includes('no dr') || 
+      lowerName.includes('no diabetic') ||
+      (!grade && !lowerName && !label);
+
+    const isSevereOrProliferative = 
+      grade >= 3 || 
+      lowerName.includes('severe') || 
+      lowerName.includes('proliferative') ||
+      label.includes('severe') ||
+      label.includes('proliferative');
+
+    if (isNoDR) {
+      return {
+        name: 'No Diabetic Retinopathy',
+        classes: 'bg-green-100 text-green-700 dark:bg-green-950/60 dark:text-green-300 border border-green-200 dark:border-green-800/80',
+        dotColor: 'bg-green-500 dark:bg-green-400'
+      };
+    }
+
+    if (isSevereOrProliferative) {
+      return {
+        name: rawName || (grade === 4 ? 'Proliferative DR' : 'Severe DR'),
+        classes: 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800/80',
+        dotColor: 'bg-red-500 dark:bg-red-400'
+      };
+    }
+
+    // Mild or Moderate
+    return {
+      name: rawName || (grade === 1 ? 'Mild DR' : 'Moderate DR'),
+      classes: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80',
+      dotColor: 'bg-amber-500 dark:bg-amber-400'
+    };
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn pb-12 bg-transparent">
       
@@ -171,7 +216,7 @@ export const PatientArchiveView = ({
 
       {/* 3. Longitudinal EHR Data Table */}
       <section 
-        className="rounded-2xl overflow-hidden bg-white/75 dark:bg-slate-900/75 backdrop-blur-md shadow-lg border border-white/30 dark:border-slate-800/60 transition-colors duration-300"
+        className="rounded-2xl overflow-hidden bg-white/70 dark:bg-slate-900/70 backdrop-blur-md shadow-lg border border-white/30 dark:border-slate-800/60 transition-colors duration-300"
       >
         
         {filteredList.length === 0 ? (
@@ -213,7 +258,7 @@ export const PatientArchiveView = ({
                   return (
                     <tr 
                       key={item.scan_uuid || item.id}
-                      className="hover:bg-teal-50/30 dark:hover:bg-teal-950/30 transition-colors group"
+                      className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors duration-200 ease-in-out group cursor-default"
                     >
                       {/* Scan ID with Icon */}
                       <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white">
@@ -245,18 +290,15 @@ export const PatientArchiveView = ({
 
                       {/* Classification Badge */}
                       <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold font-mono border ${
-                          item.predicted_label === 'NO_DR'
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
-                            : isHighRisk
-                              ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800'
-                              : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800'
-                        }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${
-                            item.predicted_label === 'NO_DR' ? 'bg-emerald-500' : isHighRisk ? 'bg-rose-500' : 'bg-amber-500'
-                          }`} />
-                          <span>{item.severity_name || (item.predicted_label === 'NO_DR' ? 'No DR' : 'DR Detected')}</span>
-                        </span>
+                        {(() => {
+                          const badge = getSeverityBadgeProps(item);
+                          return (
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shadow-xs ${badge.classes}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${badge.dotColor}`} />
+                              <span>{badge.name}</span>
+                            </span>
+                          );
+                        })()}
                       </td>
 
                       {/* Quantum Certainty Progress */}

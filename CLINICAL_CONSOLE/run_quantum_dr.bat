@@ -31,7 +31,7 @@ echo [OK] Python and Node.js detected.
 echo.
 
 echo [2/3] Starting Backend Server (FastAPI + PennyLane QPU)...
-start "Quantum-DR Backend (Port 8000)" cmd /k "cd /d "%~dp0backend" && python run.py"
+start "Quantum-DR Backend (Port 8000)" cmd /k "cd /d "%~dp0" && python backend/run.py"
 
 echo [3/3] Starting Frontend Server (Vite + React)...
 start "Quantum-DR Frontend (Port 5173)" cmd /k "cd /d "%~dp0frontend" && npm run dev"
