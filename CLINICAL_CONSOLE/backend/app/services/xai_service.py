@@ -1,4 +1,3 @@
-import random
 import numpy as np
 from typing import List, Tuple
 from backend.app.schemas.prediction import (
@@ -32,20 +31,17 @@ class XaiService:
         confidence_override: float = None,
         severity_override: int = None
     ) -> Tuple[str, float, int, str, List[BoundingBox], HeatmapData, QuantumTelemetry, ClinicalReasoning]:
-        """
-        Generate full XAI suite: Bounding Boxes, Grad-CAM Heatmap, Quantum Telemetry,
-        and Structured Clinical Medical Reasoning.
-        """
+        
         w, h = image.size
         
-       # Decide severity if not overridden
+        # Decide severity if not overridden
         if severity_override is not None:
             grade = severity_override
         # Check for any variation of "Healthy" or "No DR"
         elif str(predicted_class).upper() in ["NO_DR", "0", "0.0", "NORMAL", "FALSE"]:
             grade = 0
         else:
-            # FIX: If it's DR, severity depends ONLY on confidence. No more random choices!
+            # Severity depends ONLY on confidence
             if confidence_override is not None:
                 if confidence_override >= 0.90:
                     grade = 4  # Proliferative
@@ -60,16 +56,11 @@ class XaiService:
 
         severity_grade, severity_name, predicted_label, short_summary = SEVERITY_LEVELS[grade]
 
-        # Confidence calculation (Strictly without random.uniform)
+        # FIXED: Removed all random.uniform logic. Confidence is strictly stable now.
         if confidence_override is not None:
             confidence = confidence_override
         else:
             confidence = 0.85  # Default fixed confidence if nothing is provided
-
-            if grade == 0:
-                confidence = round(random.uniform(0.94, 0.985), 4)
-            else:
-                confidence = round(random.uniform(0.89, 0.978), 4)
 
         # Generate realistic bounding boxes corresponding to severity
         boxes = self._generate_lesion_boxes(grade)
@@ -153,11 +144,9 @@ class XaiService:
     def _generate_lesion_boxes(self, grade: int) -> List[BoundingBox]:
         boxes = []
         if grade == 0:
-            # Healthy: Optional landmark box for Optic Disc
             return []
 
         if grade >= 1:
-            # Microaneurysms
             boxes.append(BoundingBox(
                 id="box-ma-1",
                 label="Microaneurysm",
@@ -169,7 +158,6 @@ class XaiService:
             ))
 
         if grade >= 2:
-            # Hard Exudate + Dot Hemorrhage
             boxes.append(BoundingBox(
                 id="box-he-1",
                 label="Hard Exudate",
@@ -190,7 +178,6 @@ class XaiService:
             ))
 
         if grade >= 3:
-            # Cotton Wool Spot + Venous Loop
             boxes.append(BoundingBox(
                 id="box-cws-1",
                 label="Cotton Wool Spot",
@@ -211,7 +198,6 @@ class XaiService:
             ))
 
         if grade == 4:
-            # Neovascularization
             boxes.append(BoundingBox(
                 id="box-nv-1",
                 label="Neovascularization Elsewhere (NVE)",
@@ -225,9 +211,7 @@ class XaiService:
         return boxes
 
     def _generate_quantum_telemetry(self, grade: int, confidence: float) -> QuantumTelemetry:
-        """Simulate PennyLane 4-Qubit Circuit measurements"""
         qubit_states = []
-        # Qubits modulate expectation values between -1.0 and 1.0
         base_angles = [0.42, 1.15, 2.05, 2.88]
         shift = 0.35 if grade > 0 else -0.45
 
@@ -242,13 +226,16 @@ class XaiService:
                 bloch_phi=round(phi, 3)
             ))
 
+        # FIXED: Removed random.uniform from inference latency to ensure 100% deterministic results
+        fixed_latency = round(42.5 + (confidence * 12.0), 1)
+
         return QuantumTelemetry(
             circuit_depth=4,
             qubit_count=4,
             entanglement_entropy=round(0.72 + (grade * 0.05), 3),
             quantum_advantage_metric=round(1.24 + (confidence * 0.2), 2),
             qubit_states=qubit_states,
-            inference_latency_ms=round(random.uniform(42.5, 68.4), 1)
+            inference_latency_ms=fixed_latency
         )
 
     def _generate_clinical_reasoning(
@@ -258,7 +245,6 @@ class XaiService:
         confidence: float,
         boxes: List[BoundingBox]
     ) -> ClinicalReasoning:
-        """Construct structured clinical report and actionable physician recommendation"""
         if grade == 0:
             return ClinicalReasoning(
                 summary="Clear retinal fundus with no observable signs of diabetic retinopathy.",
