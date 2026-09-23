@@ -282,11 +282,6 @@ class XaiService:
             Biomarker(name="Microaneurysms", status="Present" if grade >= 1 else "Absent", clinical_significance="Early biomarker of capillary wall breakdown."),
             Biomarker(name="Hard Exudates", status="Present" if grade >= 2 else "Absent", clinical_significance="Serous lipid effusion requiring macular monitoring."),
             Biomarker(name="Cotton Wool Spots", status="Present" if grade >= 3 else "Absent", clinical_significance="Micro-infarction of retinal nerve fibers (axoplasmic stasis)."),
-            Biomalarker_name="Neovascularization", status="Present" if grade == 4 else "Absent" # corrected format below
-        ] if False else [
-            Biomarker(name="Microaneurysms", status="Present" if grade >= 1 else "Absent", clinical_significance="Early biomarker of capillary wall breakdown."),
-            Biomarker(name="Hard Exudates", status="Present" if grade >= 2 else "Absent", clinical_significance="Serous lipid effusion requiring macular monitoring."),
-            Biomarker(name="Cotton Wool Spots", status="Present" if grade >= 3 else "Absent", clinical_significance="Micro-infarction of retinal nerve fibers (axoplasmic stasis)."),
             Biomarker(name="Neovascularization", status="Present" if grade == 4 else "Absent", clinical_significance="High risk of pre-retinal hemorrhage & tractional detachment.")
         ]
 
