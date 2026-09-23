@@ -38,13 +38,14 @@ class XaiService:
         """
         w, h = image.size
         
-        # Decide severity if not overridden
+       # Decide severity if not overridden
         if severity_override is not None:
             grade = severity_override
-        elif predicted_class == "NO_DR":
+        # Check for any variation of "Healthy" or "No DR"
+        elif str(predicted_class).upper() in ["NO_DR", "0", "0.0", "NORMAL", "FALSE"]:
             grade = 0
-        elif predicted_class == "DR":
-            # FIX: Removed random.choice(). Now severity depends on model's confidence!
+        else:
+            # FIX: If it's DR, severity depends ONLY on confidence. No more random choices!
             if confidence_override is not None:
                 if confidence_override >= 0.90:
                     grade = 4  # Proliferative
@@ -56,22 +57,16 @@ class XaiService:
                     grade = 1  # Mild
             else:
                 grade = 2
-        else:
-    
-            # Default realistic distribution for demo uploads (simulating clinical screening)
-            grade = random.choices([0, 1, 2, 3, 4], weights=[0.25, 0.20, 0.25, 0.20, 0.10])[0]
 
         severity_grade, severity_name, predicted_label, short_summary = SEVERITY_LEVELS[grade]
 
-        # Confidence calculation
+        # Confidence calculation (Strictly without random.uniform)
         if confidence_override is not None:
             confidence = confidence_override
         else:
-            if grade == 0:
-                confidence = round(random.uniform(0.94, 0.985), 4)
-            else:
-                confidence = round(random.uniform(0.89, 0.978), 4)
+            confidence = 0.85  # Default fixed confidence if nothing is provided
 
+        # (Iske theek neeche se aapka '# Generate realistic bounding boxes...' wala code shuru hona chahiye)
         # Generate realistic bounding boxes corresponding to severity
         boxes = self._generate_lesion_boxes(grade)
         
