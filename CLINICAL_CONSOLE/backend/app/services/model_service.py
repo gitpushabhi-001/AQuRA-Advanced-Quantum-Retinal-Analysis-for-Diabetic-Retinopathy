@@ -165,6 +165,48 @@ class ModelService:
             else:
                 return 1
 
+    def generate_gradcam(self, input_tensor: torch.Tensor, target_class: int = 0) -> np.ndarray:
+        """
+        Derives Grad-CAM activation map strictly from the actual 4-qubit quantum model's
+        feature maps and backpropagated gradients at the bottleneck convolutional layer.
+        target_class: 0 for DR pathological evidence in QUANTUM_MODEL.pth.
+        """
+        try:
+            target_layer = self.model.encoder.encoder[21]
+            features = []
+            gradients = []
+
+            def forward_hook(module, inp, out):
+                features.append(out)
+
+            def backward_hook(module, grad_in, grad_out):
+                gradients.append(grad_out[0])
+
+            handle_f = target_layer.register_forward_hook(forward_hook)
+            handle_b = target_layer.register_full_backward_hook(backward_hook)
+
+            inp = input_tensor.clone().detach().requires_grad_(True)
+            self.model.zero_grad()
+            logits = self.model(inp)
+            score = logits[0, target_class]
+            score.backward()
+
+            handle_f.remove()
+            handle_b.remove()
+
+            feat = features[0][0].detach().cpu().numpy()  # [512, 28, 28]
+            grad = gradients[0][0].detach().cpu().numpy()  # [512, 28, 28]
+
+            weights = np.mean(grad, axis=(1, 2))  # [512]
+            cam = np.zeros(feat.shape[1:], dtype=np.float32)
+            for i, w in enumerate(weights):
+                cam += w * feat[i]
+            cam = np.maximum(cam, 0)  # ReLU
+            return cam
+        except Exception as e:
+            print(f"[ModelService] Grad-CAM generation warning: {e}")
+            return None
+
     def predict(self, image: Image.Image):
         """
         Perform disease prediction on medical retinal image using QUANTUM_MODEL.pth.
@@ -181,7 +223,10 @@ class ModelService:
         # 1. Preprocess retinal image with ImageNet statistics
         input_tensor = self.transform(image).unsqueeze(0).to(self.device)
 
-        # 2. Run real PyTorch CNN + PennyLane Quantum Variational Circuit
+        # 2. Derive true Grad-CAM activations from PyTorch + PennyLane Quantum Hybrid Model
+        raw_cam = self.generate_gradcam(input_tensor, target_class=0)
+
+        # 3. Run real PyTorch CNN + PennyLane Quantum Variational Circuit
         with torch.no_grad():
             outputs = self.model(input_tensor)
             probabilities = torch.softmax(outputs, dim=1).cpu().numpy()[0]
@@ -215,13 +260,14 @@ class ModelService:
 
         elapsed_latency_ms = round((time.time() - start_time) * 1000, 1)
 
-        # 3. Generate aligned XAI visualization and reasoning with REAL values
+        # 4. Generate aligned XAI visualization and reasoning with REAL values
         out = xai_service.generate_xai_output(
             image,
             predicted_class=predicted_class,
             confidence=confidence,
             severity_grade=severity_grade,
-            latency_ms=elapsed_latency_ms
+            latency_ms=elapsed_latency_ms,
+            raw_cam=raw_cam
         )
 
         return (*out, False)  # is_simulation = False (Strictly Real Inference)
