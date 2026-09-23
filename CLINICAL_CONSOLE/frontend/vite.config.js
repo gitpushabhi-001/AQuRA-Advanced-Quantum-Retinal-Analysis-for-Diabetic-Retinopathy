@@ -10,24 +10,24 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/predict': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://aquara-advance-retinal-kit.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/history': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://aquara-advance-retinal-kit.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/health': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://aquara-advance-retinal-kit.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://aquara-advance-retinal-kit.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       }
     }
   }

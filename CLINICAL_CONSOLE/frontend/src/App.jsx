@@ -130,7 +130,7 @@ export function App() {
       setErrorMessage(
         serverDetail 
           ? `Analysis failed: ${serverDetail}` 
-          : (err.message ? `Analysis failed: ${err.message}. Ensure backend is active on port 8000.` : 'Analysis failed. Ensure the FastAPI backend server is active on port 8000.')
+          : (err.message ? `Analysis failed: ${err.message}. Ensure backend service is active.` : 'Analysis failed. Ensure the FastAPI backend server is active.')
       );
     }
   };
