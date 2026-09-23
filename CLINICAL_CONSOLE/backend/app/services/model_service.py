@@ -1,4 +1,5 @@
 import os
+import gc
 import time
 from pathlib import Path
 from PIL import Image
@@ -197,6 +198,15 @@ class ModelService:
             feat = features[0][0].detach().cpu().numpy()  # [512, 28, 28]
             grad = gradients[0][0].detach().cpu().numpy()  # [512, 28, 28]
 
+            # Clear intermediate backward graph tensors immediately to free memory
+            del features
+            del gradients
+            del inp
+            del logits
+            del score
+            if TORCH_AVAILABLE and torch is not None:
+                self.model.zero_grad(set_to_none=True)
+
             weights = np.mean(grad, axis=(1, 2))  # [512]
             cam = np.zeros(feat.shape[1:], dtype=np.float32)
             for i, w in enumerate(weights):
@@ -211,6 +221,7 @@ class ModelService:
         """
         Perform disease prediction on medical retinal image using QUANTUM_MODEL.pth.
         Returns: (label, confidence, severity_grade, severity_name, boxes, heatmap, telemetry, reasoning, is_simulation)
+        Optimized for low-memory environments (Render 512MB RAM limit).
         """
         start_time = time.time()
         
@@ -227,6 +238,7 @@ class ModelService:
         raw_cam = self.generate_gradcam(input_tensor, target_class=0)
 
         # 3. Run real PyTorch CNN + PennyLane Quantum Variational Circuit
+        # Ensure all PyTorch model inferences are strictly inside torch.no_grad() block
         with torch.no_grad():
             outputs = self.model(input_tensor)
             probabilities = torch.softmax(outputs, dim=1).cpu().numpy()[0]
@@ -269,6 +281,15 @@ class ModelService:
             latency_ms=elapsed_latency_ms,
             raw_cam=raw_cam
         )
+
+        # 5. Clean up tensors and force garbage collection for low-memory environments (Render 512MB RAM)
+        del input_tensor
+        if 'raw_cam' in locals() and raw_cam is not None:
+            del raw_cam
+        if TORCH_AVAILABLE and torch is not None:
+            if hasattr(self, 'model') and self.model is not None:
+                self.model.zero_grad(set_to_none=True)
+        gc.collect()
 
         return (*out, False)  # is_simulation = False (Strictly Real Inference)
 

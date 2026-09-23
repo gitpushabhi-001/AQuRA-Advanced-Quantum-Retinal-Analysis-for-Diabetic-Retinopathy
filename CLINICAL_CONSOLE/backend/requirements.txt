@@ -1,6 +1,7 @@
+# Specifically pulls lightweight CPU-only PyTorch wheels (<180MB) for low-memory Render 512MB limit
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch>=2.1.0
-torchvision>=0.16.0
+torch>=2.2.0
+torchvision>=0.17.0
 pennylane>=0.35.0
 fastapi>=0.110.0
 uvicorn>=0.28.0
