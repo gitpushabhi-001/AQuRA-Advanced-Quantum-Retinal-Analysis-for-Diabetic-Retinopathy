@@ -41,10 +41,10 @@ class XaiService:
         # Decide severity if not overridden
         if severity_override is not None:
             grade = severity_override
-        elif predicted_class == "NO_DR":
+        elif predicted_class is not None and str(predicted_class).upper() in ["NO_DR", "0", "0.0", "NORMAL", "FALSE", "HEALTHY"]:
             grade = 0
-        elif predicted_class == "DR":
-            # FIX: Removed random.choice(). Now severity depends on model's confidence!
+        elif predicted_class is not None and str(predicted_class).upper() in ["DR", "1", "1.0", "TRUE", "ABNORMAL"]:
+            # Severity depends on model's confidence
             if confidence_override is not None:
                 if confidence_override >= 0.90:
                     grade = 4  # Proliferative
@@ -57,9 +57,8 @@ class XaiService:
             else:
                 grade = 2
         else:
-    
-            # Default realistic distribution for demo uploads (simulating clinical screening)
-            grade = random.choices([0, 1, 2, 3, 4], weights=[0.25, 0.20, 0.25, 0.20, 0.10])[0]
+            # Safe Default: Agar class match na ho, toh seedha Healthy (0) maano
+            grade = 0
 
         severity_grade, severity_name, predicted_label, short_summary = SEVERITY_LEVELS[grade]
 
