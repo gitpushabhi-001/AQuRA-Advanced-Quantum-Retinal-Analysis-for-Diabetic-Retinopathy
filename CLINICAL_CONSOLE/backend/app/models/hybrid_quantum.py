@@ -197,26 +197,15 @@ class HybridModel(nn.Module):
     def forward(self, x):
         if not TORCH_AVAILABLE:
             return None
+        
+        # Save original input device (CPU or GPU)
+        device = x.device
+        
+        # Extract features from CNN backbone
         features = self.encoder(x)
-        # Quantum operations are executed on CPU device interface
-        q_out = self.quantum(features.cpu().float())
-        return q_out.to(x.device)
-
-
-# ==============================================================================
-# USER MODEL WEIGHTS INJECTION HOOK:
-# ==============================================================================
-# To use your trained weights:
-# 1. Save your trained PyTorch checkpoint as: 'quantum_dr_model.pth'
-# 2. Drop it into: backend/app/ml/weights/quantum_dr_model.pth
-#
-# The model loading workflow executed by model_service.py is:
-# ------------------------------------------------------------------------------
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# loaded_model = HybridModel().to(device)
-# loaded_model.quantum.to("cpu")
-# loaded_model.load_state_dict(
-#     torch.load('quantum_dr_model.pth', map_location=device, weights_only=True)
-# )
-# loaded_model.eval()
-# ==============================================================================
+        
+        # Safely transfer features to CPU for quantum circuit processing and map back to original device
+        features_cpu = features.cpu().float()
+        q_out = self.quantum(features_cpu)
+        
+        return q_out.to(device)
