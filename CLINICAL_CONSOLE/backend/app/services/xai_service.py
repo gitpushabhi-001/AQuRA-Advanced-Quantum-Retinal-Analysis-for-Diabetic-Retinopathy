@@ -43,22 +43,22 @@ class XaiService:
             grade = severity_override
         elif predicted_class is not None and str(predicted_class).upper() in ["NO_DR", "0", "0.0", "NORMAL", "FALSE", "HEALTHY"]:
             grade = 0
-        elif predicted_class is not None and str(predicted_class).upper() in ["DR", "1", "1.0", "TRUE", "ABNORMAL"]:
-            # Severity depends on model's confidence
-            if confidence_override is not None:
-                if confidence_override >= 0.90:
-                    grade = 4  # Proliferative
-                elif confidence_override >= 0.75:
-                    grade = 3  # Severe
-                elif confidence_override >= 0.60:
-                    grade = 2  # Moderate
-                else:
-                    grade = 1  # Mild
+        elif predicted_class is not None:
+            val = str(predicted_class).upper()
+            if val in ["DR", "ABNORMAL", "TRUE"]:
+                grade = 2  # Default to moderate DR if class says DR
             else:
-                grade = 2
+                try:
+                    grade = int(float(predicted_class))
+                    grade = max(0, min(4, grade))
+                except:
+                    grade = 2
         else:
-            # Safe Default: Agar class match na ho, toh seedha Healthy (0) maano
-            grade = 0
+            # Fallback agar predicted_class None ho: Confidence ke adhaar par decide karein
+            if confidence_override is not None and confidence_override > 0.75:
+                grade = 2
+            else:
+                grade = 0
 
         severity_grade, severity_name, predicted_label, short_summary = SEVERITY_LEVELS[grade]
 
@@ -279,6 +279,11 @@ class XaiService:
             )
 
         biomarkers = [
+            Biomarker(name="Microaneurysms", status="Present" if grade >= 1 else "Absent", clinical_significance="Early biomarker of capillary wall breakdown."),
+            Biomarker(name="Hard Exudates", status="Present" if grade >= 2 else "Absent", clinical_significance="Serous lipid effusion requiring macular monitoring."),
+            Biomarker(name="Cotton Wool Spots", status="Present" if grade >= 3 else "Absent", clinical_significance="Micro-infarction of retinal nerve fibers (axoplasmic stasis)."),
+            Biomalarker_name="Neovascularization", status="Present" if grade == 4 else "Absent" # corrected format below
+        ] if False else [
             Biomarker(name="Microaneurysms", status="Present" if grade >= 1 else "Absent", clinical_significance="Early biomarker of capillary wall breakdown."),
             Biomarker(name="Hard Exudates", status="Present" if grade >= 2 else "Absent", clinical_significance="Serous lipid effusion requiring macular monitoring."),
             Biomarker(name="Cotton Wool Spots", status="Present" if grade >= 3 else "Absent", clinical_significance="Micro-infarction of retinal nerve fibers (axoplasmic stasis)."),
