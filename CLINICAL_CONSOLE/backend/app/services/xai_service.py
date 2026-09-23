@@ -9,6 +9,7 @@ from backend.app.schemas.prediction import (
     Biomarker,
     ClinicalReasoning
 )
+# pyrefly: ignore [missing-import]
 import cv2
 import base64
 from PIL import Image
@@ -43,8 +44,20 @@ class XaiService:
         elif predicted_class == "NO_DR":
             grade = 0
         elif predicted_class == "DR":
-            grade = random.choice([2, 3, 4])
+            # FIX: Removed random.choice(). Now severity depends on model's confidence!
+            if confidence_override is not None:
+                if confidence_override >= 0.90:
+                    grade = 4  # Proliferative
+                elif confidence_override >= 0.75:
+                    grade = 3  # Severe
+                elif confidence_override >= 0.60:
+                    grade = 2  # Moderate
+                else:
+                    grade = 1  # Mild
+            else:
+                grade = 2
         else:
+    
             # Default realistic distribution for demo uploads (simulating clinical screening)
             grade = random.choices([0, 1, 2, 3, 4], weights=[0.25, 0.20, 0.25, 0.20, 0.10])[0]
 
