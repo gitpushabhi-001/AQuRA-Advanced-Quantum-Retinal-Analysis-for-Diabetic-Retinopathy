@@ -66,7 +66,11 @@ class XaiService:
         else:
             confidence = 0.85  # Default fixed confidence if nothing is provided
 
-        # (Iske theek neeche se aapka '# Generate realistic bounding boxes...' wala code shuru hona chahiye)
+            if grade == 0:
+                confidence = round(random.uniform(0.94, 0.985), 4)
+            else:
+                confidence = round(random.uniform(0.89, 0.978), 4)
+
         # Generate realistic bounding boxes corresponding to severity
         boxes = self._generate_lesion_boxes(grade)
         
