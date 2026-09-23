@@ -152,13 +152,20 @@ class ModelService:
                     probabilities = torch.softmax(outputs, dim=1).cpu().numpy()[0]
                     predicted_idx = int(np.argmax(probabilities))
                     confidence = float(probabilities[predicted_idx])
-                    predicted_class = "DR" if predicted_idx == 1 else "NO_DR"
+                    
+                    # FIXED: 5-class handling (Grade 0 = No DR, Grades 1-4 = DR)
+                    severity_grade = predicted_idx
+                    if severity_grade == 0:
+                        predicted_class = "NO_DR"
+                    else:
+                        predicted_class = "DR"
 
-                # Generate aligned XAI visualization and reasoning
+                # Generate aligned XAI visualization and reasoning with correct severity override
                 out = xai_service.generate_xai_output(
                     image,
                     predicted_class=predicted_class,
-                    confidence_override=confidence
+                    confidence_override=confidence,
+                    severity_override=severity_grade
                 )
                 
                 return (*out, False)  # is_simulation = False
