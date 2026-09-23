@@ -1,10 +1,14 @@
 import axios from 'axios';
 
+// Pointing directly to the FastAPI backend route on port 8000
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 const api = axios.create({
-  baseURL: '/',
+  baseURL: API_BASE_URL,
   headers: {
     'Accept': 'application/json',
   },
+  timeout: 60000,
 });
 
 export const predictImage = async (fileOrBlob, filename = 'medical_scan.jpg') => {

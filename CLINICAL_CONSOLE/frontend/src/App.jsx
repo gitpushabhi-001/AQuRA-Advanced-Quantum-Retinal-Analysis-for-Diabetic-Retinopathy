@@ -126,9 +126,11 @@ export function App() {
       clearInterval(stepInterval);
       console.error('Prediction failed:', err);
       setIsAnalyzing(false);
+      const serverDetail = err.response?.data?.detail;
       setErrorMessage(
-        err.response?.data?.detail || 
-        'Analysis failed. Ensure the FastAPI backend server is active on port 8000.'
+        serverDetail 
+          ? `Analysis failed: ${serverDetail}` 
+          : (err.message ? `Analysis failed: ${err.message}. Ensure backend is active on port 8000.` : 'Analysis failed. Ensure the FastAPI backend server is active on port 8000.')
       );
     }
   };
