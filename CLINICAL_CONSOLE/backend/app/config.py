@@ -20,6 +20,7 @@ class Settings(BaseModel):
     
     # Environment Variables
     API_KEY: str = os.getenv("API_KEY", "your_api_key_here")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", os.getenv("API_KEY", "your_gemini_api_key_here"))
     DEBUG: bool = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes", "t")
 
     # Storage & Model Paths (Dynamically Resolved)
@@ -71,10 +72,12 @@ class Settings(BaseModel):
     HOST: str = os.getenv("HOST", "0.0.0.0")
     PORT: int = int(os.getenv("PORT", 8000))
     CORS_ORIGINS: list[str] = [
-        "https://aquara-advance-retinal-kit.onrender.com",
-        "https://aqura-retinal-kit.onrender.com",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
         "*"
     ]
     
