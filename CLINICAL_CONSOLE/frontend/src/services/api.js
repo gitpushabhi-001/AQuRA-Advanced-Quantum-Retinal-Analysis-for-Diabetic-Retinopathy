@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Get base URL from environment or fallback to live Render backend
-const RAW_API_BASE_URL = import.meta.env.VITE_API_URL || 'https://aqura-backend-b5y9.onrender.com';
+// Get base URL from environment or fallback to local backend on port 8000
+const RAW_API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Ensure no trailing slashes on base URL to prevent double slashes (e.g., '//predict')
 export const API_BASE_URL = (RAW_API_BASE_URL || '').trim().replace(/\/+$/, '');
@@ -14,7 +14,7 @@ export const formatEndpointUrl = (endpoint) => {
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 120000, // 120s timeout for cold start and live quantum inference
+  timeout: 120000,
   headers: {
     'Accept': 'application/json',
   },

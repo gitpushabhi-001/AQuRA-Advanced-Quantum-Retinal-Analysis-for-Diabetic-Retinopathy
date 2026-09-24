@@ -10,24 +10,24 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/predict': {
-        target: 'https://aqura-backend-b5y9.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
       '/history': {
-        target: 'https://aqura-backend-b5y9.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
       '/health': {
-        target: 'https://aqura-backend-b5y9.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
       '/api': {
-        target: 'https://aqura-backend-b5y9.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       }
     }
   }
